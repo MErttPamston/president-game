@@ -171,9 +171,9 @@
 Никаких зависимостей. Просто скачайте файл и откройте в браузере:
 
 ```bash
-git clone https://github.com/ваш-ник/president-game
+git clone https://github.com/MErttPamston/president-game
 cd president-game
-# Откройте president_game_v8.html в любом браузере
+# Откройте index.html в любом браузере
 ```
 
 Или откройте напрямую через `Файл → Открыть` в Chrome, Firefox, Safari, Edge.
