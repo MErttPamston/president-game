@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ПРЕЗИДЕНТ: ПУТЬ В БУДУЩЕЕ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ===== DARK THEME (default) ===== */
+[data-theme="dark"] {
+  --bg: #050a1a;
+  --panel: #0a1628;
+  --panel2: #0d1f36;
+  --border: #1a3a5c;
+  --accent: #00aa55;
+  --accent-bright: #00dd66;
+  --accent2: #55ddff;
+  --accent3: #ff6b35;
+  --text: #c8e8ff;
+  --text2: #7aaabb;
+  --dim: #3a5a7a;
+  --red: #ff3355;
+  --yellow: #ffd700;
+  --shadow: #000;
+  --grid-color: rgba(0,170,85,0.025);
+  --star-opacity: 0.6;
+}
+
+/* ===== LIGHT THEME ===== */
+[data-theme="light"] {
+  --bg: #e8f0f8;
+  --panel: #ffffff;
+  --panel2: #f0f6ff;
+  --border: #a0bcd8;
+  --accent: #007733;
+  --accent-bright: #008844;
+  --accent2: #0077aa;
+  --accent3: #cc4400;
+  --text: #1a2a3a;
+  --text2: #445566;
+  --dim: #7a99aa;
+  --red: #cc1133;
+  --yellow: #aa7700;
+  --shadow: #99aabb;
+  --grid-color: rgba(0,100,50,0.04);
+  --star-opacity: 0.15;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; image-rendering:pixelated; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 8px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  transition: background 0.4s, color 0.4s;
+}
+
+#stars-canvas {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  pointer-events:none; z-index:0; opacity: var(--star-opacity);
+  transition: opacity 0.4s;
+}
+
+body::before {
+  content:'';
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events:none; z-index:0;
+}
+
+#app { position:relative; z-index:1; max-width:920px; margin:0 auto; padding:12px; }
+
+/* ===== HEADER ===== */
+#header { text-align:center; margin-bottom:12px; animation:fadeIn 1s ease; }
+#header h1 {
+  font-size:13px; color:var(--accent-bright);
+  text-shadow:0 0 20px var(--accent);
+  letter-spacing:2px; animation:glow-pulse 2s infinite; line-height:1.7;
+}
+#header h2 { font-size:6px; color:var(--accent2); margin-top:4px; letter-spacing:4px; }
+@keyframes glow-pulse {
+  0%,100%{text-shadow:0 0 20px var(--accent),0 0 40px var(--accent);}
+  50%{text-shadow:0 0 35px var(--accent-bright),0 0 70px var(--accent-bright);}
+}
+
+/* ===== STATS ROW ===== */
+#stats-row {
+  display:flex; gap:6px; margin-bottom:10px;
+  justify-content:center; align-items:center; flex-wrap:wrap;
+}
+.stat-box {
+  background:var(--panel); border:2px solid var(--border);
+  padding:5px 12px; text-align:center; position:relative;
+  box-shadow:3px 3px 0 var(--shadow);
+  transition: background 0.3s, border-color 0.3s;
+}
+.stat-box::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:var(--accent2); opacity:0.5; }
+.stat-box .label { color:var(--dim); font-size:5px; margin-bottom:3px; letter-spacing:1px; }
+.stat-box .value { color:var(--yellow); font-size:11px; display:block; }
+.stat-box.year-box .value { color:var(--accent-bright); font-size:13px; }
+.stat-box.fame-box .value { color:var(--accent3); font-size:11px; }
+.stat-box.era-box .value { color:var(--accent2); font-size:9px; }
+
+#days-flash {
+  font-size:9px; color:var(--accent3); opacity:0; font-weight:bold;
+  text-shadow:0 0 8px var(--accent3); min-width:70px; text-align:center;
+}
+#days-flash.show { animation:daysFlash 1.8s ease forwards; opacity:1; }
+@keyframes daysFlash {
+  0%{opacity:0;transform:scale(0.5) translateY(6px);}
+  20%{opacity:1;transform:scale(1.3) translateY(0);}
+  70%{opacity:1;transform:scale(1);}
+  100%{opacity:0;transform:scale(0.8);}
+}
+.slot-spin { animation:slot 0.45s steps(5,end); }
+@keyframes slot {
+  0%{transform:translateY(-10px);opacity:0;}
+  40%{transform:translateY(-4px);opacity:0.6;}
+  100%{transform:translateY(0);opacity:1;}
+}
+
+/* ===== RESOURCES ===== */
+#resources {
+  background:var(--panel); border:2px solid var(--border);
+  padding:10px; margin-bottom:10px; box-shadow:3px 3px 0 var(--shadow);
+  position:relative; transition:background 0.3s, border-color 0.3s;
+}
+#resources::before { content:'◆'; position:absolute; top:4px; left:5px; font-size:5px; color:var(--dim); }
+#resources h3 { color:var(--accent2); font-size:6px; margin-bottom:8px; letter-spacing:2px; border-bottom:1px solid var(--border); padding-bottom:5px; text-align:center; }
+.resource-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.resource-header { display:flex; justify-content:space-between; margin-bottom:3px; align-items:center; }
+.resource-name { font-size:6px; color:var(--text2); }
+.resource-val { font-size:8px; color:var(--accent-bright); transition:color 0.3s; }
+.resource-val.flash-green { animation:flashGreen 0.7s ease; }
+.resource-val.flash-red   { animation:flashRed 0.7s ease; }
+@keyframes flashGreen { 0%,100%{color:var(--accent-bright);transform:scale(1);} 50%{color:#00ff88;transform:scale(1.4);text-shadow:0 0 10px #00ff88;} }
+@keyframes flashRed   { 0%,100%{color:var(--accent-bright);transform:scale(1);} 50%{color:var(--red);transform:scale(1.4);text-shadow:0 0 10px var(--red);} }
+.bar-track { background:#fff; height:9px; border:1px solid var(--dim); overflow:hidden; }
+.bar-fill { height:100%; background:var(--accent); transition:width 0.5s steps(8,end); position:relative; }
+.bar-fill::after { content:''; position:absolute; right:0; top:0; bottom:0; width:3px; background:rgba(255,255,255,0.8); animation:bar-blink 0.8s steps(1) infinite; }
+@keyframes bar-blink { 0%,49%{opacity:1;} 50%,100%{opacity:0;} }
+.bar-fill.danger  { background:var(--red); }
+.bar-fill.warning { background:var(--yellow); }
+
+/* ===== MAIN LAYOUT ===== */
+#main-area { display:grid; grid-template-columns:1fr 300px; gap:10px; margin-bottom:10px; }
+#event-area { grid-column:1; }
+#side-area  { grid-column:2; display:flex; flex-direction:column; gap:10px; }
+
+/* ===== EVENT CARD ===== */
+.event-card {
+  background:var(--panel); border:2px solid var(--accent2);
+  padding:12px; box-shadow:4px 4px 0 var(--shadow), 0 0 20px rgba(85,221,255,0.06);
+  animation:slideDown 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative; transition:background 0.3s, border-color 0.3s;
+}
+@keyframes slideDown { from{transform:translateY(-30px) rotate(-2deg);opacity:0;} to{transform:translateY(0) rotate(0);opacity:1;} }
+
+.ripple-good { border-color:var(--accent2); box-shadow:4px 4px 0 var(--shadow),0 0 22px rgba(85,221,255,0.2); }
+.ripple-bad  { border-color:var(--accent3); box-shadow:4px 4px 0 var(--shadow),0 0 22px rgba(255,107,53,0.25); }
+
+.neighbor-good { border-color:var(--accent-bright); box-shadow:4px 4px 0 var(--shadow),0 0 25px rgba(0,221,102,0.2); }
+.neighbor-bad  { border-color:var(--accent3); box-shadow:4px 4px 0 var(--shadow),0 0 25px rgba(255,107,53,0.25); }
+
+.consequence-good { border-color:var(--accent-bright); box-shadow:4px 4px 0 var(--shadow),0 0 20px rgba(0,221,102,0.18); }
+.consequence-bad  { border-color:var(--red); box-shadow:4px 4px 0 var(--shadow),0 0 20px rgba(255,51,85,0.18); }
+.badge-good { background:var(--accent-bright); color:#000; }
+.badge-bad  { background:var(--red); color:#fff; }
+
+.quest-card  { border-color:var(--accent3); box-shadow:4px 4px 0 var(--shadow),0 0 30px rgba(255,107,53,0.18); }
+.crisis-card { border-color:var(--red); box-shadow:4px 4px 0 var(--shadow),0 0 40px rgba(255,51,85,0.25); animation:slideDown 0.4s cubic-bezier(0.34,1.56,0.64,1), crisis-glow 1s 0.4s infinite; }
+@keyframes crisis-glow { 0%,100%{box-shadow:4px 4px 0 var(--shadow),0 0 20px rgba(255,51,85,0.2);} 50%{box-shadow:4px 4px 0 var(--shadow),0 0 50px rgba(255,51,85,0.5);} }
+
+.card-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:7px; }
+.card-badge { font-size:5px; padding:3px 6px; background:var(--accent2); color:#000; font-weight:bold; }
+.card-badge.quest-badge  { background:var(--accent3); animation:badge-shake 0.5s steps(2) infinite; }
+.card-badge.crisis-badge { background:var(--red); color:#fff; animation:badge-shake 0.3s steps(2) infinite; }
+@keyframes badge-shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-1px);} 75%{transform:translateX(1px);} }
+.card-title { font-size:7px; color:var(--yellow); flex:1; }
+
+.pixel-art-wrap { margin:6px 0; padding:6px; background:rgba(0,170,85,0.04); border:1px solid var(--border); display:flex; justify-content:center; align-items:center; min-height:76px; }
+[data-theme="light"] .pixel-art-wrap { background:rgba(0,100,50,0.04); }
+
+.event-text { font-size:8px; line-height:1.9; color:var(--text); margin:6px 0 10px; min-height:26px; }
+.typewriter-cursor::after { content:'█'; animation:blink 0.5s steps(1) infinite; }
+@keyframes blink { 0%,49%{opacity:1;} 50%,100%{opacity:0;} }
+
+.btn-group { display:flex; gap:6px; flex-wrap:wrap; }
+
+/* ===== NEXT TURN BIG BUTTON ===== */
+#next-turn-area {
+  margin-top:8px;
+}
+#next-btn-main {
+  font-family:'Press Start 2P',monospace; font-size:9px;
+  padding:12px 20px; border:3px solid var(--accent-bright);
+  color:var(--accent-bright); background:var(--panel);
+  cursor:pointer; width:100%; letter-spacing:1px;
+  box-shadow:4px 4px 0 var(--shadow), 0 0 20px rgba(0,170,85,0.15);
+  transition:all 0.08s; outline:none;
+  animation:btn-pulse 2s infinite;
+}
+#next-btn-main:hover { background:var(--accent); color:#000; text-shadow:none; box-shadow:4px 4px 0 var(--shadow),0 0 30px var(--accent); }
+#next-btn-main:active { transform:translate(3px,3px); box-shadow:1px 1px 0 var(--shadow); }
+#next-btn-main:disabled { opacity:0.35; pointer-events:none; animation:none; }
+@keyframes btn-pulse { 0%,100%{box-shadow:4px 4px 0 var(--shadow),0 0 8px rgba(0,170,85,0.15);} 50%{box-shadow:4px 4px 0 var(--shadow),0 0 25px rgba(0,220,100,0.35);} }
+
+/* ===== REGULAR BUTTONS ===== */
+.btn {
+  font-family:'Press Start 2P',monospace; font-size:7px; padding:7px 10px;
+  border:2px solid; cursor:pointer; position:relative;
+  transition:all 0.05s; outline:none; background:var(--panel);
+  letter-spacing:0.5px; box-shadow:3px 3px 0 var(--shadow);
+}
+.btn:active { transform:translate(2px,2px); box-shadow:1px 1px 0 var(--shadow); }
+.btn-primary { border-color:var(--accent); color:var(--accent); }
+.btn-primary:hover { background:var(--accent); color:#000; text-shadow:none; box-shadow:3px 3px 0 var(--shadow),0 0 15px var(--accent); }
+.btn-choice { border-color:var(--accent2); color:var(--accent2); flex:1; min-width:110px; }
+.btn-choice:hover { background:var(--accent2); color:#000; box-shadow:3px 3px 0 var(--shadow),0 0 15px var(--accent2); }
+.btn-quest { border-color:var(--accent3); color:var(--accent3); flex:1; min-width:90px; }
+.btn-quest:hover { background:var(--accent3); color:#000; box-shadow:3px 3px 0 var(--shadow),0 0 15px var(--accent3); }
+.btn-crisis { border-color:var(--red); color:var(--red); flex:1; min-width:90px; }
+.btn-crisis:hover { background:var(--red); color:#fff; box-shadow:3px 3px 0 var(--shadow),0 0 15px var(--red); }
+.btn-small { font-size:7px; padding:7px 11px; }
+
+/* ===== SIDE PANELS ===== */
+.side-panel {
+  background:var(--panel); border:2px solid var(--border);
+  padding:8px; box-shadow:3px 3px 0 var(--shadow);
+  position:relative; transition:background 0.3s, border-color 0.3s;
+}
+.side-panel::before { content:'◆'; position:absolute; top:4px; left:5px; font-size:5px; color:var(--dim); }
+.side-panel h3 { font-size:6px; color:var(--dim); margin-bottom:8px; letter-spacing:2px; border-bottom:1px solid var(--border); padding-bottom:4px; }
+
+/* LOG */
+#log-list { list-style:none; }
+#log-list li { font-size:5.5px; color:var(--dim); padding:2px 0; border-bottom:1px dotted rgba(128,128,128,0.1); animation:logEntry 0.3s ease; line-height:1.6; }
+#log-list li:first-child { color:var(--text); }
+#log-list li.log-good { color:var(--accent-bright); }
+#log-list li.log-bad  { color:var(--red); }
+#log-list li.log-crisis { color:var(--yellow); }
+@keyframes logEntry { from{opacity:0;transform:translateX(-6px);} to{opacity:1;transform:translateX(0);} }
+
+/* SAVE */
+.save-row { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:8px; }
+#code-area { display:flex; gap:7px; align-items:center; }
+#save-code-input {
+  font-family:'Press Start 2P',monospace; font-size:7px;
+  background:var(--panel2); border:2px solid var(--border);
+  color:var(--accent2); padding:7px 9px; flex:1; outline:none; min-width:0;
+}
+#save-code-input:focus { border-color:var(--accent2); }
+
+/* THEME TOGGLE */
+#theme-toggle-wrap { display:flex; gap:7px; align-items:center; justify-content:center; }
+.theme-btn {
+  font-family:'Press Start 2P',monospace; font-size:7px; padding:7px 11px;
+  border:2px solid var(--border); cursor:pointer; background:var(--panel);
+  color:var(--dim); box-shadow:2px 2px 0 var(--shadow); outline:none; transition:all 0.1s;
+}
+.theme-btn.active { border-color:var(--accent2); color:var(--accent2); background:var(--panel2); }
+.theme-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+
+/* ===== EPOCH ===== */
+#epoch-msg {
+  display:none; position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  background:var(--panel); border:4px solid var(--yellow);
+  padding:36px 44px; text-align:center; z-index:100;
+  min-width:320px; box-shadow:8px 8px 0 var(--shadow),0 0 60px rgba(255,215,0,0.3);
+  animation:epochPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes epochPop { from{transform:translate(-50%,-50%) scale(0.4);opacity:0;} to{transform:translate(-50%,-50%) scale(1);opacity:1;} }
+#epoch-msg .epoch-icon { font-size:18px; color:var(--yellow); display:block; margin-bottom:12px; animation:epochIcon 0.6s steps(3) infinite; }
+@keyframes epochIcon { 0%{transform:scale(1);} 50%{transform:scale(1.25);} 100%{transform:scale(1);} }
+#epoch-msg p { font-size:10px; color:var(--yellow); line-height:2; }
+#epoch-msg p.sub { font-size:6px; color:var(--text); margin-top:8px; }
+#epoch-msg p.epoch-years { font-size:16px; color:var(--accent-bright); text-shadow:0 0 20px var(--accent); margin:6px 0; letter-spacing:2px; }
+
+/* MUSIC BTN */
+#music-btn { position:fixed; bottom:14px; right:14px; z-index:50; }
+#music-btn.playing { border-color:var(--yellow)!important; color:var(--yellow)!important; animation:music-pulse 0.5s steps(2) infinite; }
+#track-btns { position:fixed; bottom:14px; right:110px; z-index:50; display:flex; gap:4px; }
+#track-btns .theme-btn { font-size:12px; padding:5px 8px; }
+#track-btns .theme-btn.active { border-color:var(--yellow); color:var(--yellow); background:var(--panel2); }
+@keyframes music-pulse { 0%,100%{box-shadow:3px 3px 0 var(--shadow);} 50%{box-shadow:3px 3px 0 var(--shadow),0 0 20px var(--yellow);} }
+
+/* OVERLAY */
+#overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.93); z-index:200; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:24px; }
+#overlay.show { display:flex; }
+#overlay h1 { font-size:15px; line-height:1.8; margin-bottom:20px; white-space:pre-line; animation:overlayTitle 0.8s ease; }
+@keyframes overlayTitle { from{transform:scale(0.3);opacity:0;} to{transform:scale(1);opacity:1;} }
+.overlay-lose h1 { color:var(--red); text-shadow:0 0 30px var(--red); }
+.overlay-win h1  { color:var(--yellow); animation:overlayTitle 0.8s ease, shimmer 1s 0.8s infinite; }
+@keyframes shimmer { 0%,100%{text-shadow:0 0 30px var(--yellow),0 0 60px rgba(255,215,0,0.4);} 50%{text-shadow:0 0 60px var(--yellow),0 0 120px rgba(255,215,0,0.7);} }
+#overlay .sub-small { font-size:6px; color:#aabbcc; margin-top:6px; margin-bottom:20px; line-height:2; white-space:pre-line; max-width:500px; }
+.star-rain { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:199; overflow:hidden; }
+.win-star { position:absolute; color:var(--yellow); animation:starFall linear infinite; }
+@keyframes starFall { from{transform:translateY(-20px) rotate(0deg);opacity:1;} to{transform:translateY(110vh) rotate(720deg);opacity:0;} }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); }
+
+/* ===== THREAT PANEL ===== */
+#threat-panel {
+  background:var(--panel); border:2px solid var(--border);
+  padding:8px; box-shadow:3px 3px 0 var(--shadow);
+  position:relative; transition:background 0.3s, border-color 0.3s;
+}
+#threat-panel h3 { font-size:6px; color:var(--red); margin-bottom:8px; letter-spacing:2px; border-bottom:1px solid var(--border); padding-bottom:4px; }
+.threat-item {
+  display:flex; align-items:flex-start; gap:5px; padding:4px 0;
+  border-bottom:1px dotted rgba(255,51,85,0.15); animation:logEntry 0.3s ease;
+}
+.threat-item:last-child { border-bottom:none; }
+.threat-icon { font-size:9px; flex-shrink:0; margin-top:1px; }
+.threat-body { flex:1; }
+.threat-name { font-size:5.5px; color:var(--red); display:block; margin-bottom:2px; }
+.threat-desc { font-size:5px; color:var(--dim); line-height:1.6; }
+.threat-timer { font-size:5px; color:var(--yellow); white-space:nowrap; flex-shrink:0; margin-top:1px; }
+.threat-item.threat-critical .threat-name { color:var(--red); animation:badge-shake 0.4s steps(2) infinite; }
+.threat-item.threat-critical .threat-icon { animation:badge-shake 0.4s steps(2) infinite; }
+#threat-empty { font-size:5.5px; color:var(--dim); text-align:center; padding:6px 0; line-height:1.8; }
+
+/* ===== DECAY WARNING INDICATOR ===== */
+.decay-tick { position:absolute; right:5px; top:4px; font-size:5px; color:var(--red); opacity:0; }
+.decay-tick.show { animation:decayFlash 1s ease forwards; }
+@keyframes decayFlash { 0%{opacity:0;} 20%{opacity:1;} 80%{opacity:1;} 100%{opacity:0;} }
+
+/* ===== STABILITY BAR ===== */
+#stability-row {
+  display:flex; align-items:center; gap:8px; padding:5px 10px;
+  background:var(--panel); border:2px solid var(--border);
+  box-shadow:3px 3px 0 var(--shadow); margin-bottom:10px;
+}
+.stab-label { font-size:5px; color:var(--dim); letter-spacing:1px; white-space:nowrap; }
+#stab-bar-track { flex:1; height:7px; background:#111; border:1px solid var(--dim); overflow:hidden; }
+#stab-bar-fill { height:100%; background:var(--accent); transition:width 0.6s steps(10,end); }
+#stab-val { font-size:7px; color:var(--yellow); white-space:nowrap; min-width:32px; text-align:right; }
+
+@media (max-width:700px) {
+  #main-area { grid-template-columns:1fr; }
+  #side-area  { grid-column:1; }
+  .resource-grid { grid-template-columns:1fr; }
+  #header h1 { font-size:9px; }
+  .btn-group { flex-direction:column; }
+  #epoch-msg { min-width:260px; padding:24px 18px; }
+}
+</style>
+</head>
+<body>
+<canvas id="stars-canvas"></canvas>
+<div id="app">
+  <div id="header">
+    <h1>👑 ПРЕЗИДЕНТ<br>ПУТЬ В БУДУЩЕЕ</h1>
+    <h2>[ RETRO STRATEGY v1.2 ]</h2>
+  </div>
+
+  <!-- STATS ROW -->
+  <div id="stats-row">
+    <div class="stat-box year-box">
+      <div class="label">ГОД</div>
+      <div class="value" id="year-val">1200</div>
+    </div>
+    <div class="stat-box">
+      <div class="label">ХОДЫ</div>
+      <div class="value" id="turns-val">0</div>
+    </div>
+    <div class="stat-box">
+      <div class="label">ДНЕЙ</div>
+      <div class="value" id="days-val">0</div>
+    </div>
+    <div class="stat-box fame-box">
+      <div class="label">СЛАВА</div>
+      <div class="value" id="fame-val">0</div>
+    </div>
+    <div id="days-flash">+0 дн.</div>
+  </div>
+
+  <!-- STABILITY -->
+  <div id="stability-row">
+    <span class="stab-label">⚖ СТАБИЛЬНОСТЬ</span>
+    <div id="stab-bar-track"><div id="stab-bar-fill" style="width:60%"></div></div>
+    <span id="stab-val">60%</span>
+  </div>
+
+  <!-- RESOURCES -->
+  <div id="resources">
+    <h3>── РЕСУРСЫ ГОСУДАРСТВА ──</h3>
+    <div class="resource-grid">
+      <div class="resource-item">
+        <div class="resource-header"><span class="resource-name">🌿 ПРИРОДА</span><span class="resource-val" id="res-nature-val">60%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="bar-nature" style="width:60%"></div></div>
+      </div>
+      <div class="resource-item">
+        <div class="resource-header"><span class="resource-name">👥 ЛЮДИ</span><span class="resource-val" id="res-people-val">70 тыс.</span></div>
+        <div class="bar-track"><div class="bar-fill" id="bar-people" style="width:70%"></div></div>
+      </div>
+      <div class="resource-item">
+        <div class="resource-header"><span class="resource-name">⚔️ АРМИЯ</span><span class="resource-val" id="res-army-val">40 тыс.</span></div>
+        <div class="bar-track"><div class="bar-fill" id="bar-army" style="width:40%"></div></div>
+      </div>
+      <div class="resource-item">
+        <div class="resource-header"><span class="resource-name">👑 КАЗНА</span><span class="resource-val" id="res-gold-val">50 тыс.</span></div>
+        <div class="bar-track"><div class="bar-fill" id="bar-gold" style="width:50%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div id="main-area">
+    <div id="event-area">
+      <div class="event-card" id="event-card">
+        <div class="card-header">
+          <span class="card-badge" id="card-badge">СОБЫТИЕ</span>
+          <span class="card-title" id="card-title">НАЧАЛО ПРАВЛЕНИЯ</span>
+        </div>
+        <div class="pixel-art-wrap"><canvas id="pixel-canvas" width="112" height="80"></canvas></div>
+        <div class="event-text" id="event-text">Вы принимаете власть над великим государством. Ваши решения определят судьбу народа на века вперёд.</div>
+        <div class="btn-group" id="btn-group"></div>
+      </div>
+      <div id="next-turn-area">
+        <button id="next-btn-main" onclick="nextTurn()">▶▶ СЛЕДУЮЩИЙ ХОД</button>
+      </div>
+    </div>
+
+    <div id="side-area">
+      <!-- LOG -->
+      <div class="side-panel">
+        <h3>── ХРОНИКИ ──</h3>
+        <ul id="log-list"><li>Начало правления. Год 1200.</li></ul>
+      </div>
+      <!-- SAVE -->
+      <div class="side-panel">
+        <h3>── СОХРАНЕНИЕ ──</h3>
+        <div class="save-row">
+          <button class="btn btn-small btn-primary" onclick="saveLocal()">💾 Память</button>
+          <button class="btn btn-small btn-primary" onclick="saveCode()">🔐 Код</button>
+          <button class="btn btn-small btn-primary" onclick="loadLocal()">📀 Загр.</button>
+        </div>
+        <div id="code-area">
+          <input type="text" id="save-code-input" placeholder="КОД..." maxlength="300">
+          <button class="btn btn-small btn-primary" onclick="loadCode()">▶</button>
+        </div>
+      </div>
+      <!-- THREATS -->
+      <div id="threat-panel">
+        <h3>── УГРОЗЫ ГОСУДАРСТВУ ──</h3>
+        <div id="threat-list"><div id="threat-empty">Угроз не обнаружено.<br>Наслаждайтесь тишиной.</div></div>
+      </div>
+      <!-- THEME -->
+      <div class="side-panel">
+        <h3>── ТЕМА ОФОРМЛЕНИЯ ──</h3>
+        <div id="theme-toggle-wrap">
+          <button class="theme-btn active" id="theme-dark"  onclick="setTheme('dark')">🌙 ТЁМНАЯ</button>
+          <button class="theme-btn"        id="theme-light" onclick="setTheme('light')">☀️ СВЕТЛАЯ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EPOCH -->
+<div id="epoch-msg">
+  <span class="epoch-icon">⚡</span>
+  <p>ЭПОХА СМЕНИЛАСЬ!</p>
+  <p class="epoch-years" id="epoch-years-text">+6 ЛЕТ</p>
+  <p class="sub" id="epoch-sub">Автосохранение создано.</p>
+  <br>
+  <button class="btn btn-primary btn-small" onclick="closeEpoch()">ПРОДОЛЖИТЬ ▶</button>
+</div>
+
+<button class="btn btn-small btn-primary" id="music-btn" onclick="toggleMusic()">🎵 МУЗЫКА</button>
+<div id="track-btns">
+  <button class="theme-btn" id="track-mario" onclick="switchTrack('mario')">🍄</button>
+  <button class="theme-btn" id="track-tetris" onclick="switchTrack('tetris')">🧩</button>
+  <button class="theme-btn" id="track-zelda" onclick="switchTrack('zelda')">🗡️</button>
+  <button class="theme-btn" id="track-imperial" onclick="switchTrack('imperial')">🌑</button>
+</div>
+
+<div id="overlay">
+  <div class="star-rain" id="star-rain"></div>
+  <h1 id="overlay-title">ИГРА ОКОНЧЕНА</h1>
+  <p class="sub-small" id="overlay-sub">бетта</p>
+  <button class="btn btn-primary" onclick="restartGame()">🔄 СЫГРАТЬ СНОВА</button>
+</div>
+
+<script>
+// ==================== STARFIELD ====================
+(function(){
+  const c=document.getElementById('stars-canvas'),ctx=c.getContext('2d');let stars=[];
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  function init(){resize();stars=Array.from({length:130},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+0.5,b:Math.random()*Math.PI*2,sp:Math.random()*0.015+0.008}));}
+  function draw(){ctx.clearRect(0,0,c.width,c.height);stars.forEach(s=>{s.b+=s.sp;const a=(Math.sin(s.b)*0.5+0.5)*0.75+0.1;ctx.fillStyle=`rgba(180,210,255,${a})`;ctx.fillRect(Math.floor(s.x),Math.floor(s.y),Math.ceil(s.r),Math.ceil(s.r));});requestAnimationFrame(draw);}
+  window.addEventListener('resize',init);init();draw();
+})();
+
+// ==================== THEME ====================
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('theme-dark').classList.toggle('active',t==='dark');
+  document.getElementById('theme-light').classList.toggle('active',t==='light');
+  localStorage.setItem('prez_theme',t);
+}
+(function(){const t=localStorage.getItem('prez_theme')||'dark';setTheme(t);})();
+
+// ==================== PALETTE & SPRITES ====================
+const PAL=[null,'#8B4513','#FF6B00','#FFD700','#00AA55','#005522','#4444CC','#8888FF','#CC2222','#FF8888','#888888','#CCCCCC','#FFFFFF','#000000','#552200','#FFAA44','#224488','#00CCFF','#FF44AA','#663300','#AA3300','#FFB84D','#334455','#5599CC'];
+const SPRITES={
+  castle:[[0,1,0,0,0,0,0,1,0,0,0,0],[1,1,1,0,0,0,1,1,1,0,0,0],[1,1,1,10,10,10,1,1,1,0,0,0],[0,10,10,10,10,10,10,10,0,0,0],[0,10,10,12,12,12,10,10,0,0,0],[0,10,10,12,13,12,10,10,0,0,0],[0,10,10,12,12,12,10,10,0,0,0],[0,10,10,10,6,10,10,10,0,0,0],[0,0,10,10,6,10,10,0,0,0,0],[0,0,10,10,6,10,10,0,0,0,0]],
+  soldier:[[0,0,0,8,8,8,0,0,0,0],[0,0,0,15,15,15,0,0,0,0],[0,0,0,15,15,15,0,0,0,0],[0,0,8,10,10,10,8,0,0,0],[0,0,0,10,10,10,0,0,0,0],[0,1,1,10,10,10,1,1,0,0],[0,0,0,10,10,10,0,0,0,0],[0,0,0,10,0,10,0,0,0,0],[0,0,1,10,0,10,1,0,0,0],[0,0,1,10,0,10,1,0,0,0]],
+  farmer:[[0,0,3,3,3,0,0,0,0,0],[0,0,3,15,3,0,0,0,0,0],[0,0,0,15,0,0,0,0,0,0],[0,0,2,15,2,0,0,0,0,0],[0,0,4,15,4,0,0,0,0,0],[0,2,4,4,4,2,0,0,0,0],[0,0,4,4,4,0,0,0,0,0],[0,0,4,0,4,0,0,0,0,0],[0,0,4,0,4,0,0,0,0,0],[0,1,1,0,1,1,0,0,0,0]],
+  merchant:[[0,0,0,3,3,0,0,0,0,0],[0,0,3,15,15,3,0,0,0,0],[0,0,0,15,15,0,0,0,0,0],[0,0,2,15,15,2,0,0,0,0],[0,0,2,2,2,2,0,3,0,0],[0,2,2,2,2,2,2,3,0,0],[0,0,2,2,2,2,0,0,0,0],[0,0,1,0,0,1,0,0,0,0],[0,1,1,0,0,1,1,0,0,0],[0,1,0,0,0,0,1,0,0,0]],
+  dragon:[[0,0,8,8,0,0,0,0,0,0],[0,8,9,9,8,0,0,0,0,0],[8,9,9,9,9,8,0,8,0,0],[8,9,3,9,3,9,8,8,8,0],[8,9,9,9,9,9,9,9,9,8],[0,8,9,9,9,9,8,8,0,0],[0,0,8,2,9,2,8,0,0,0],[0,8,2,2,9,2,2,8,0,0],[8,2,0,2,9,2,0,2,8,0],[0,0,0,2,0,2,0,0,0,0]],
+  ship:[[0,0,0,12,0,0,0,0,0,0],[0,0,0,12,0,0,0,0,0,0],[0,0,12,12,12,0,0,0,0,0],[0,12,12,12,12,12,0,0,0,0],[0,12,12,12,12,12,0,0,0,0],[1,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,0,0,0],[17,17,17,17,17,17,17,17,0,0],[0,17,17,17,17,17,17,0,0,0],[0,0,17,17,17,17,0,0,0,0]],
+  mage:[[0,0,18,18,18,0,0,0,0,0],[0,18,7,7,7,18,0,0,0,0],[0,0,15,15,15,0,0,0,0,0],[0,7,15,15,15,7,0,0,0,0],[0,0,7,7,7,0,0,0,0,0],[0,3,7,7,7,3,7,0,0,0],[0,0,7,7,7,0,0,0,0,0],[0,0,7,0,7,0,0,0,0,0],[0,7,7,0,7,7,0,0,0,0],[0,7,0,0,0,7,0,0,0,0]],
+  mine:[[0,10,10,10,10,10,10,0,0,0],[10,11,11,11,11,11,11,10,0,0],[10,11,1,11,11,1,11,10,0,0],[10,11,11,11,11,11,11,10,0,0],[10,11,3,3,3,3,11,10,0,0],[10,11,3,13,13,3,11,10,0,0],[10,11,3,13,13,3,11,10,0,0],[10,11,11,11,11,11,11,10,0,0],[0,10,10,10,10,10,10,0,0,0],[0,0,1,0,0,0,1,0,0,0]],
+  tower:[[0,0,10,10,10,10,0,0,0,0],[0,10,10,10,10,10,10,0,0,0],[0,10,10,12,12,10,10,0,0,0],[0,10,12,12,12,12,10,0,0,0],[0,10,12,13,13,12,10,0,0,0],[0,10,12,13,13,12,10,0,0,0],[0,10,10,12,12,10,10,0,0,0],[0,10,10,10,10,10,10,0,0,0],[0,10,10,10,10,10,10,0,0,0],[0,0,10,10,10,10,0,0,0,0]],
+  plague:[[0,13,13,0,0,13,13,0,0,0],[13,11,11,13,13,11,11,13,0,0],[13,11,8,11,11,8,11,13,0,0],[0,13,13,0,0,13,13,0,0,0],[0,0,0,8,8,0,0,0,0,0],[0,13,13,8,8,13,13,0,0,0],[13,11,11,13,13,11,11,13,0,0],[13,11,8,11,11,8,11,13,0,0],[0,13,13,0,0,13,13,0,0,0],[0,0,0,0,0,0,0,0,0,0]],
+  harvest:[[0,4,0,4,0,4,0,4,0,0],[4,5,4,5,4,5,4,5,4,0],[5,4,5,4,5,4,5,4,5,0],[0,5,0,5,0,5,0,5,0,0],[0,3,0,3,0,3,0,3,0,0],[0,3,0,3,0,3,0,3,0,0],[1,1,1,1,1,1,1,1,1,0],[0,1,0,1,0,1,0,1,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]],
+  bandit:[[0,0,13,13,13,0,0,0,0,0],[0,13,13,15,13,13,0,0,0,0],[0,0,13,15,15,13,0,0,0,0],[0,0,8,15,15,8,0,0,0,0],[0,0,13,13,13,0,0,0,0,0],[0,13,13,13,13,13,0,0,0,0],[0,13,13,13,13,13,0,0,0,0],[0,13,1,13,13,1,13,0,0,0],[0,13,1,0,0,1,13,0,0,0],[0,0,14,0,0,14,0,0,0,0]],
+  flood:[[0,17,0,0,17,0,0,17,0,0],[17,6,17,17,6,17,17,6,17,0],[0,17,17,17,17,17,17,17,0,0],[17,6,17,17,6,17,17,6,17,0],[0,17,17,17,17,17,17,17,0,0],[17,6,17,17,6,17,17,6,17,0],[0,17,17,17,17,17,17,17,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]],
+  crown:[[0,0,0,0,0,0,0,0,0,0],[3,0,3,0,3,0,3,0,3,0],[3,3,3,3,3,3,3,3,3,0],[3,3,3,3,3,3,3,3,3,0],[3,3,3,3,3,3,3,3,3,0],[3,3,3,3,3,3,3,3,3,0],[3,3,3,3,3,3,3,3,3,0],[3,3,3,3,3,3,3,3,3,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]],
+  forge:[[0,0,8,8,0,0,0,0,0,0],[0,8,3,3,8,0,0,0,0,0],[8,3,3,3,3,8,0,0,0,0],[0,10,10,10,10,0,0,0,0,0],[0,10,13,13,10,0,0,0,0,0],[0,10,13,13,10,0,0,0,0,0],[0,10,10,10,10,0,0,0,0,0],[1,1,1,1,1,1,1,0,0,0],[0,1,0,0,0,1,0,0,0,0],[1,1,0,0,0,1,1,0,0,0]],
+  king_throne:[[0,3,3,3,3,3,0,0,0,0],[3,3,15,15,15,3,3,0,0,0],[0,3,15,15,15,3,0,0,0,0],[0,2,2,2,2,2,0,0,0,0],[2,2,2,2,2,2,2,0,0,0],[2,2,12,2,12,2,2,0,0,0],[2,2,2,2,2,2,2,0,0,0],[0,1,2,2,2,2,1,0,0,0],[1,1,1,0,0,1,1,1,0,0],[1,0,1,0,0,1,0,1,0,0]],
+  skull:[[0,0,8,8,8,8,8,0,0,0],[0,8,12,12,12,12,12,8,0,0],[8,12,13,12,12,13,12,12,8,0],[8,12,13,12,12,13,12,12,8,0],[8,12,12,12,12,12,12,12,8,0],[0,8,12,8,12,8,12,8,0,0],[0,0,8,8,8,8,8,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]],
+  volcano:[[0,0,0,8,0,0,0,0,0,0],[0,0,8,2,8,0,0,0,0,0],[0,0,8,3,8,8,0,0,0,0],[0,8,8,2,8,8,8,0,0,0],[0,8,10,10,10,8,8,0,0,0],[8,8,10,10,10,10,8,8,0,0],[8,10,10,10,10,10,10,8,0,0],[8,10,10,10,10,10,10,8,0,0],[0,8,8,8,8,8,8,0,0,0],[0,0,8,0,0,0,8,0,0,0]],
+  wizard:[[0,0,18,18,18,0,0,0,0,0],[0,18,7,3,7,18,0,0,0,0],[0,0,15,15,15,0,0,0,0,0],[0,7,15,15,15,7,0,0,0,0],[7,7,7,7,7,7,7,0,0,0],[0,3,7,7,7,3,0,0,0,0],[0,0,7,7,7,0,0,0,0,0],[0,0,7,0,7,0,0,0,0,0],[0,7,7,0,7,7,0,0,0,0],[0,7,0,0,0,7,0,0,0,0]],
+  bomb:[[0,0,13,13,0,0,0,0,0,0],[0,13,3,3,13,0,0,0,0,0],[13,3,13,13,3,13,0,0,0,0],[13,13,13,13,13,13,0,0,0,0],[13,13,12,13,13,13,0,0,0,0],[13,13,13,13,13,13,0,0,0,0],[0,13,13,13,13,0,0,0,0,0],[0,0,13,13,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]],
+};
+const SPRITE_KEYS=Object.keys(SPRITES);
+function drawSprite(canvas,key){
+  const ctx=canvas.getContext('2d');
+  const sprite=SPRITES[key]||SPRITES[SPRITE_KEYS[Math.floor(Math.random()*SPRITE_KEYS.length)]];
+  const rows=sprite.length,cols=sprite[0].length;
+  const px=Math.max(Math.floor(Math.min(canvas.width/cols,canvas.height/rows)),5);
+  const ox=Math.floor((canvas.width-cols*px)/2),oy=Math.floor((canvas.height-rows*px)/2);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const ci=sprite[r][c];if(!ci)continue;ctx.fillStyle=PAL[ci];ctx.fillRect(ox+c*px,oy+r*px,px,px);}
+}
+function rndSpriteKey(){return SPRITE_KEYS[Math.floor(Math.random()*SPRITE_KEYS.length)];}
+function setPixelArt(key){drawSprite(document.getElementById('pixel-canvas'),key||rndSpriteKey());}
+
+// ==================== AUDIO ====================
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx;}
+function playTone(f,dur,vol,type,when){const ctx=getAudio();const t=when||ctx.currentTime;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type||'square';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(vol||0.07,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+dur+0.02);}
+function sfxClick(){const t=getAudio().currentTime;playTone(440,0.04,0.05,'square',t);playTone(880,0.04,0.03,'square',t+0.04);}
+function sfxChoice(){const t=getAudio().currentTime;[523,659,784].forEach((f,i)=>playTone(f,0.08,0.06,'square',t+i*0.07));}
+function sfxGood(){const t=getAudio().currentTime;[523,659,784,1047].forEach((f,i)=>playTone(f,0.1,0.06,'square',t+i*0.06));}
+function sfxBad(){const t=getAudio().currentTime;[300,250,200,150].forEach((f,i)=>playTone(f,0.1,0.07,'sawtooth',t+i*0.07));}
+function sfxCrisis(){const t=getAudio().currentTime;[800,700,600,500,400,300].forEach((f,i)=>playTone(f,0.12,0.08,'sawtooth',t+i*0.06));playTone(200,0.5,0.09,'sawtooth',t+0.36);}
+function sfxEpoch(){const t=getAudio().currentTime;[261,330,392,523,659,784,1047].forEach((f,i)=>playTone(f,0.15,0.07,'square',t+i*0.08));}
+function sfxNextTurn(){const t=getAudio().currentTime;playTone(330,0.05,0.04,'square',t);playTone(440,0.05,0.04,'square',t+0.05);}
+function sfxDefeat(){const t=getAudio().currentTime;[200,180,160,120,100].forEach((f,i)=>playTone(f,0.18,0.08,'sawtooth',t+i*0.12));}
+function sfxWin(){const t=getAudio().currentTime;const m=[523,523,523,415,523,0,659,523],d=[0.1,0.1,0.1,0.1,0.2,0.1,0.2,0.4];let at=t;m.forEach((f,i)=>{if(f>0)playTone(f,d[i]*0.9,0.08,'square',at);at+=d[i];});}
+
+// ==================== MUSIC ====================
+let musicPlaying=false,musicTimers=[],musicNodes=[],currentTrack='mario';
+const MARIO_BPM=200,BEAT=60/MARIO_BPM;
+const MARIO_MELODY=[[659,.5],[659,.5],[0,.5],[659,.5],[0,.5],[523,.5],[659,.5],[0,.5],[784,1],[0,1],[392,1],[0,1],[523,.75],[0,.5],[392,.75],[0,.5],[330,.75],[0,.5],[440,.5],[494,.5],[0,.25],[466,.25],[440,.5],[0,.5],[392,.67],[659,.67],[784,.67],[880,.5],[0,.5],[698,.5],[784,.5],[0,.5],[659,.5],[0,.5],[523,.5],[587,.5],[494,.5],[0,.5],[523,.75],[0,.5],[392,.75],[0,.5],[330,.75],[0,.5],[440,.5],[494,.5],[0,.25],[466,.25],[440,.5],[0,.5],[392,.67],[659,.67],[784,.67],[880,.5],[0,.5],[698,.5],[784,.5],[0,.5],[659,.5],[0,.5],[523,.5],[587,.5],[494,.5],[0,.5]];
+const MARIO_BASS=[[131,.5],[0,.5],[0,.5],[131,.5],[0,.5],[0,.5],[131,.5],[0,.5],[98,1],[0,1],[98,1],[0,1],[131,.5],[0,.5],[131,.5],[0,.5],[131,.5],[0,.5],[110,.5],[0,.5],[0,1],[0,.5],[131,.5],[0,.5],[196,.5],[0,.5],[196,.5],[0,.5],[196,.5],[0,.5],[0,2],[0,2],[131,.5],[0,.5],[131,.5],[0,.5],[131,.5],[0,.5],[110,.5],[0,.5],[0,1],[0,.5],[131,.5],[0,.5],[196,.5],[0,.5],[196,.5],[0,.5],[196,.5],[0,.5],[0,2],[0,2]];
+
+// Tetris - Korobeiniki
+const TETRIS_BPM=160,TBEAT=60/TETRIS_BPM;
+const TETRIS_MELODY=[[659,1],[494,.5],[523,.5],[587,1],[523,.5],[494,.5],[440,1],[440,.5],[523,.5],[659,1],[587,.5],[523,.5],[494,1.5],[523,.5],[587,1],[659,1],[523,1],[440,1],[440,2],[0,.5],[587,1],[698,.5],[880,1],[784,.5],[698,.5],[659,1.5],[523,.5],[659,1],[587,.5],[523,.5],[494,1],[494,.5],[523,.5],[587,1],[659,1],[523,1],[440,1],[440,2]];
+const TETRIS_BASS=[[330,1],[0,1],[294,1],[0,1],[262,1],[0,1],[294,1],[0,1],[330,1],[0,1],[0,1],[0,1],[294,1],[0,1],[0,1],[330,1],[262,1],[0,1],[262,2],[0,.5],[294,1],[0,1],[440,1],[0,1],[392,1],[0,1],[330,1.5],[0,.5],[330,1],[294,1],[0,1],[294,1],[0,1],[294,1],[330,1],[0,1],[262,1],[0,1],[262,2]];
+
+// Zelda - Song of Time / main theme simplified
+const ZELDA_BPM=120,ZBEAT=60/ZELDA_BPM;
+const ZELDA_MELODY=[[392,1],[523,1],[659,1],[392,.5],[523,.5],[698,.5],[659,.5],[523,1],[392,1],[0,1],[523,1],[659,1],[784,1],[523,.5],[659,.5],[831,.5],[784,.5],[659,1],[523,1],[0,1],[659,1],[784,1],[880,1],[659,.5],[784,.5],[988,.5],[880,.5],[784,1],[659,1],[0,1],[523,1],[440,1],[392,1],[330,1],[294,1],[330,1],[392,2],[0,2]];
+const ZELDA_BASS=[[196,2],[196,2],[196,2],[196,2],[262,2],[262,2],[262,2],[262,2],[330,2],[330,2],[330,2],[330,2],[262,2],[262,2],[196,2],[196,2],[196,2],[196,2],[196,2]];
+
+// Imperial March (Darth Vader theme) style
+const IMPERIAL_BPM=100,IBEAT=60/IMPERIAL_BPM;
+const IMPERIAL_MELODY=[[392,1],[392,1],[392,1],[311.1,.75],[466.2,.25],[392,1],[311.1,.75],[466.2,.25],[392,2],[587.3,1],[587.3,1],[587.3,1],[622.3,.75],[466.2,.25],[369.9,1],[311.1,.75],[466.2,.25],[392,2],[784,1],[392,.75],[392,.25],[784,1],[739.9,.75],[698.5,.25],[659.3,.25],[622.3,.25],[587.3,.5],[0,.5],[311.1,.5],[415.3,1],[369.9,.75],[349.2,.25],[329.6,.25],[311.1,.25],[293.7,.5],[0,.5],[196,.5],[294,1],[196,.75],[294,.25],[440,.75],[392,.75],[349.2,.25],[329.6,.25],[311.1,.25],[293.7,1],[587.3,1],[784,1],[392,.75],[392,.25],[784,1],[739.9,.75],[698.5,.25],[659.3,.25],[622.3,.25],[587.3,.5],[0,.5],[311.1,.5],[415.3,1],[369.9,.75],[349.2,.25],[329.6,.25],[311.1,.25],[440,1],[392,2]];
+const IMPERIAL_BASS=[[196,1],[196,1],[196,1],[155.6,.75],[233.1,.25],[196,1],[155.6,.75],[233.1,.25],[196,2],[293.7,1],[293.7,1],[293.7,1],[311.1,.75],[233.1,.25],[184.9,1],[155.6,.75],[233.1,.25],[196,2],[392,1],[196,1],[196,1],[392,1],[369.9,.75],[349.2,.25],[329.6,.5],[293.7,.5],[0,1],[155.6,.5],[207.6,1],[184.9,1],[174.6,.5],[164.8,.5],[0,1],[98,1],[147,1],[98,1],[220,.75],[196,1],[174.6,.5],[164.8,.5],[146.8,1],[293.7,1],[392,1],[196,1],[196,1],[392,1],[369.9,.75],[349.2,.25],[329.6,.5],[293.7,.5],[0,1],[155.6,.5],[207.6,1],[184.9,1],[174.6,.5],[164.8,.5],[220,1],[196,2]];
+
+const TRACKS={
+  mario:{name:'🍄 МАРИО',melody:MARIO_MELODY,bass:MARIO_BASS,bpm:MARIO_BPM,beat:BEAT},
+  tetris:{name:'🧩 ТЕТРИС',melody:TETRIS_MELODY,bass:TETRIS_BASS,bpm:TETRIS_BPM,beat:TBEAT},
+  zelda:{name:'🗡️ ЗЕЛЬДА',melody:ZELDA_MELODY,bass:ZELDA_BASS,bpm:ZELDA_BPM,beat:ZBEAT},
+  imperial:{name:'🌑 ИМПЕРИЯ',melody:IMPERIAL_MELODY,bass:IMPERIAL_BASS,bpm:IMPERIAL_BPM,beat:IBEAT},
+};
+
+function schedSeq(notes,wave,vol,startT,beat){const ctx=getAudio();let t=startT,tot=0;notes.forEach(([f,b])=>{const d=b*beat;if(f>0){const o=ctx.createOscillator(),g=ctx.createGain();o.type=wave;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.001,t+d*.85);o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+d);musicNodes.push(o);}t+=d;tot+=d;});return tot;}
+function startTrack(trackKey){
+  const tr=TRACKS[trackKey];if(!tr)return;
+  const ctx=getAudio();let ls=ctx.currentTime+0.1;
+  function sl(w){if(!musicPlaying)return;schedSeq(tr.melody,'square',0.07,w,tr.beat);const d=schedSeq(tr.bass,'triangle',0.04,w,tr.beat);const tid=setTimeout(()=>{if(musicPlaying)sl(w+d);},(d-.5)*1000);musicTimers.push(tid);}
+  sl(ls);
+}
+function stopMusic(){musicTimers.forEach(t=>clearTimeout(t));musicTimers=[];musicNodes.forEach(n=>{try{n.stop();}catch(e){}});musicNodes=[];}
+function switchTrack(key){
+  stopMusic();currentTrack=key;
+  if(musicPlaying){startTrack(key);}
+  // update button states
+  Object.keys(TRACKS).forEach(k=>{const b=document.getElementById('track-'+k);if(b)b.classList.toggle('active',k===key&&musicPlaying);});
+}
+function toggleMusic(){
+  const btn=document.getElementById('music-btn');
+  if(musicPlaying){stopMusic();musicPlaying=false;btn.classList.remove('playing');btn.textContent='🎵 МУЗЫКА';Object.keys(TRACKS).forEach(k=>{const b=document.getElementById('track-'+k);if(b)b.classList.remove('active');});}
+  else{musicPlaying=true;startTrack(currentTrack);btn.classList.add('playing');btn.textContent='🔇 СТОП';const b=document.getElementById('track-'+currentTrack);if(b)b.classList.add('active');}
+}
+
+// ==================== ERAS ====================
+const ERAS=[
+  [1200,'СРЕДНИЕ ВЕКА'],[1400,'ВОЗРОЖДЕНИЕ'],[1600,'НОВОЕ ВРЕМЯ'],
+  [1750,'ПРОСВЕЩЕНИЕ'],[1850,'ИНДУСТРИАЛИЗАЦИЯ'],[1950,'АТОМНЫЙ ВЕК'],
+  [2000,'ИНФОРМАЦИОННЫЙ ВЕК'],[2100,'ПОСТИНДУСТРИАЛЬНЫЙ'],[2200,'КОСМИЧЕСКИЙ ВЕК']
+];
+function getEra(year){let e=ERAS[0][1];for(const [y,n]of ERAS){if(year>=y)e=n;}return e;}
+
+// ==================== GAME STATE ====================
+let G={nature:50,people:40,army:20,gold:40,year:1200,turns:0,totalDays:0,fractYear:1200,fame:0,lastQuestTurn:-10,lastCrisisTurn:-20,recentEvents:[],waitingForChoice:false,currentEvent:null,epochThreshold:250,gameOver:false,pendingRipples:[],threats:[],stability:60,decayAccum:0};
+function newGame(){G={nature:50,people:40,army:20,gold:40,year:1200,turns:0,totalDays:0,fractYear:1200,fame:0,lastQuestTurn:-10,lastCrisisTurn:-20,recentEvents:[],waitingForChoice:false,currentEvent:null,epochThreshold:250,gameOver:false,pendingRipples:[],threats:[],stability:60,decayAccum:0};}
+
+// ==================== EVENTS ====================
+let ECACHE=null;
+function buildEvents(){
+  if(ECACHE)return ECACHE;
+  ECACHE=[
+    // === ПРИРОДНЫЕ КАТАСТРОФЫ ===
+    ["Сильное землетрясение разрушило три города на севере страны.","Послать строителей и золото на восстановление","Объявить эти земли опасными и переселить жителей"],
+    ["Небывалый мороз уничтожил весь озимый урожай. Зима будет голодной.","Открыть государственные зерновые запасы","Разрешить охоту в заповедных лесах для пропитания"],
+    ["Сель сошёл с гор и полностью уничтожил горный перевал — главный торговый путь.","Построить новый обходной путь через лес","Расчистить перевал силами армии"],
+    ["На полях появилась саранча. Если не действовать — урожай погибнет за три дня.","Мобилизовать всех крестьян на уничтожение насекомых","Поджечь заражённые поля, спасти хотя бы часть"],
+    ["Страшный ураган разрушил портовый город. Тысячи людей без крова.","Немедленно отправить армейские палатки и провиант","Объявить сбор пожертвований среди знати"],
+    ["Вулкан проснулся на востоке страны. Пепел засыпает деревни, реки стали кислыми.","Эвакуировать всё население в западные провинции","Построить защитные дамбы вокруг крупных городов"],
+    ["Лесные пожары охватили треть страны. Деревни горят, лесники погибают.","Бросить всю армию на тушение пожаров","Эвакуировать людей и дать огню выгореть самому"],
+    ["Небывалое наводнение — река вышла из берегов, затопив 20 деревень.","Построить дамбу, чтобы остановить воду","Выселить все прибрежные деревни на возвышенность"],
+    ["Долгая засуха иссушила все колодцы. Скот гибнет, люди уходят.","Прорыть государственные каналы от дальней реки","Купить воду у соседнего государства за золото"],
+    ["Странная болезнь губит деревья в лесах — уже погибло 40% леса страны.","Нанять учёных-лесоводов для изучения болезни","Вырубить заражённые леса, пока не перекинулось дальше"],
+    // === ЭКОНОМИКА И ТОРГОВЛЯ ===
+    ["Купцы обнаружили, что фальшивые монеты составляют треть оборота страны. Торговля встала.","Изъять все монеты и переплавить и выпустить заново новые с защитой","Поймать и публично казнить фальшивомонетчиков"],
+    ["Богатый торговец предлагает единоличное право на торговлю на всю морскую торговлю в обмен на огромную сумму золота.","Принять предложение и получить золото","Отказать — монополия опасна для других купцов"],
+    ["Соседнее государство ввело торговые налоги на наши товары. Наши купцы терпят убытки.","Ввести ответные торговые налоги на их товары","Предложить переговоры о свободной торговле"],
+    ["В горах найдена огромная залежь железной руды. Шахтёры просят разрешения начать добычу.","Открыть государственные шахты и добывать руду","Сдать залежи в аренду частным купцам"],
+    ["Рынок зерна рухнул — цены упали, крестьяне разоряются и бросают поля.","Государство скупает зерно по фиксированной цене","Ввести экспорт зерна за рубеж, поднять цены"],
+    ["Гильдия торговцев требует снизить налоги вдвое, иначе грозит уйти в другое королевство.","Снизить налоги для гильдии","Отказать — пусть уходят, найдём новых купцов"],
+    ["Пираты захватили три торговых корабля вместе с грузом и экипажами.","Снарядить военный флот для освобождения заложников","Заплатить выкуп и вернуть людей без боя"],
+    ["Засуха на юге подняла цены на хлеб втрое. Беднота голодает.","Установить максимальную цену на хлеб по всей стране","Раздавать бесплатный хлеб беднякам из казны"],
+    ["Иностранные банкиры предлагают крупный заём под хорошие проценты на 10 лет.","Взять заём и вложить в строительство","Отказаться — долги опасны для страны"],
+    ["Контрабандисты наладили схему уклонения от налогов на торговлю. Казна теряет треть доходов.","Выставить армейские посты на всех дорогах","Внедрить тайных агентов в торговые сети"],
+    // === ВОЕННЫЕ СОБЫТИЯ ===
+    ["Пограничная крепость захвачена разбойниками. Они требуют выкуп, иначе начнут сжигать деревни.","Атаковать крепость немедленно силами армии","Заплатить выкуп и выиграть время"],
+    ["Дезертиры из армии создали вооружённую банду и грабят сёла.","Отправить военный отряд для уничтожения банды","Объявить прощение дезертирам в обмен на сдачу оружия"],
+    ["Горные племена вышли из союза и начали набеги на приграничные сёла.","Отправить армию для усмирения племён","Предложить племенам новый выгодный договор"],
+    ["Армейские офицеры требуют повышения жалованья, угрожая забастовкой.","Поднять зарплата армии за счёт казны","Уволить зачинщиков и набрать новых солдат"],
+    ["Шпионы донесли: соседнее государство тайно строит осадные орудия против нас.","Начать переговоры и потребовать объяснений","Тоже начать тайную подготовку к войне"],
+    ["Военный лагерь уничтожен взрывом — кто-то поджёг пороховые склады.","Расследовать диверсию и найти виновных","Срочно восстановить запасы пороха из казны"],
+    ["Ветераны войны требуют обещанных земельных наделов — их ждали уже 5 лет.","Выделить землю ветеранам из государственных фондов","Выплатить компенсацию золотом вместо земли"],
+    ["Морские разбойники установили базу на острове у наших берегов.","Отправить флот и уничтожить базу","Договориться с пиратами — пусть не трогают наши суда"],
+    // === НАРОД И ОБЩЕСТВО ===
+    ["Крестьяне трёх провинций отказываются платить налоги — говорят, управляющий ворует.","Провести проверку и наказать вора, если он есть","Усилить стражу и собрать налоги силой"],
+    ["В столице вспыхнул пожар в бедном квартале. Тысячи людей остались без жилья.","Выделить казённые деньги на восстановление квартала","Переселить погорельцев в пустующие военные казармы"],
+    ["Молодёжь массово бежит из деревень в города, поля пустеют.","Принять закон, обязывающий молодёжь работать в сельском хозяйстве","Построить в деревнях школы и мастерские, чтобы была работа"],
+    ["Церковь требует закрыть все таверны — мол, народ спивается и не работает.","Закрыть таверны в рабочие дни, оставить по праздникам","Отказать церкви — это дело личное, не государственное"],
+    ["Бродячие артисты объединились в гильдию и просят официального признания.","Признать гильдию и дать им площадку в столице","Запретить гильдию как рассадник бродяжничества"],
+    ["В нескольких городах одновременно вспыхнула эпидемия. Каждый день умирают сотни людей.","Ввести жёсткий карантин — закрыть города, никого не выпускать","Послать лекарей и лечить всех за государственный счёт"],
+    ["Голодные беженцы из соседней страны валят к нашей границе — уже 50 тысяч человек.","Открыть границу и принять всех беженцев","Закрыть границу, не пустить никого"],
+    ["Рабочие строительного цеха объявили забастовку — требуют сократить рабочий день.","Принять требования и сократить рабочий день","Разогнать забастовку и арестовать зачинщиков"],
+    ["Знаменитый учёный-лекарь изобрёл лекарство от чумы, но требует за секрет огромную сумму.","Выкупить секрет лекарства для всей страны","Отказать — заставить поделиться лекарством силой"],
+    // === ПРИРОДА И ЭКОЛОГИЯ ===
+    ["Рыбаки сообщают: рыбы в реках почти не осталось — сети пустые уже второй год.","Запретить рыбную ловлю на три года для восстановления популяции","Привезти рыбу из морских портов для населения"],
+    ["Охотники вырубили почти весь лес в провинции ради продажи древесины.","Принять закон о защите лесов и запретить вырубку","Ввести высокий налог на вырубку — пусть платят за каждое дерево"],
+    ["Строители предлагают осушить огромное болото под пахотные поля — это уничтожит редких птиц.","Разрешить осушение — стране нужны поля","Запретить — болото важнее для природы"],
+    ["Стада диких оленей вытаптывают крестьянские поля, уничтожая урожай.","Разрешить охоту на оленей для защиты полей","Построить ограды вокруг полей за государственный счёт"],
+    ["Ядовитые сточные воды с кузнечных мастерских текут в главную реку страны.","Закрыть мастерские до установки очистных сооружений","Оштрафовать кузнецов и потребовать исправить ситуацию"],
+    ["Пчёлы исчезают из ульев по всей стране — урожай под угрозой без опылителей.","Запретить определённые удобрения, которые губят пчёл","Привезти пчёл из других стран и восстановить популяцию"],
+    // === СТРОИТЕЛЬСТВО И РАЗВИТИЕ ===
+    ["Архитекторы предлагают построить великий акведук, который снабдит водой три провинции.","Одобрить строительство акведука — это на века","Сначала починить старые дороги, акведук подождёт"],
+    ["Главная дорога страны разбита — телеги застревают, торговля замедлилась вдвое.","Нанять тысячи рабочих для ремонта дороги","Обязать землевладельцев у дороги самим её чинить"],
+    ["Купцы предлагают построить новый торговый порт на южном берегу за счёт казны.","Построить порт — торговля вырастет в разы","Отказать — пусть купцы сами финансируют порт"],
+    ["Стены столицы обветшали — в случае осады они не выдержат. Нужен срочный ремонт.","Немедленно начать масштабную реконструкцию стен","Пристроить деревянные укрепления — быстро и дёшево"],
+    ["Учёные предлагают построить астрономическую башню для изучения звёзд и навигации.","Финансировать строительство башни — знания важны","Отказать — деньги нужнее на армию и дороги"],
+    // === ПОЛИТИКА И ИНТРИГИ ===
+    ["Советник-казначей пойман на растрате: за три года он похитил четверть бюджета.","Публично осудить и казнить казначея","Вернуть деньги тихо, уволить без огласки"],
+    ["Два влиятельных барона поссорились и грозят начать войну друг с другом внутри страны.","Вызвать знатных землевладельцев ко двору и примирить их силой","Поддержать одного барона против другого — ослабить обоих"],
+    ["Церковь требует отдать ей управление школами по всей стране.","Отдать школы церкви — пусть учат детей","Оставить школы государственными, отказать церкви"],
+    ["Тайная организация распространяет листовки против власти. Народ читает с интересом.","Найти и арестовать организаторов","Ответить публичным обращением к народу"],
+    ["Иностранный посол требует выдать ему беглого преступника, который укрылся у нас.","Выдать преступника соседям — закон есть закон","Отказать в выдаче — он просит убежища"],
+    ["Старейшины северных деревень требуют автономии — хотят сами управлять своими землями.","Дать северным деревням ограниченное самоуправление","Отказать — страна должна быть единой"],
+    ["Три провинции требуют уменьшить налоги, угрожая выйти из состава государства.","Снизить налоги для недовольных провинций","Послать армию и напомнить, кто здесь правит"],
+    ["Молодой полководец завоевал любовь армии — солдаты готовы идти за ним, но не за вами.","Назначить его главнокомандующим и привязать к себе","Тихо отправить его в дальний гарнизон от столицы"],
+    // === ДИПЛОМАТИЯ ===
+    ["Соседнее королевство предлагает выдать замуж свою принцессу за нашего принца — политический союз.","Принять предложение и скрепить союз браком","Вежливо отказать — мы сами выберем невесту"],
+    ["Три малых государства на границе просят взять их под защиту в обмен на ежегодную дань.","Принять их под покровительство","Отказать — лишние обязательства нам не нужны"],
+    ["Торговая республика предлагает обменяться послами для регулярных переговоров.","Принять предложение и открыть посольства","Отказать — нам не нужны чужие глаза в столице"],
+    ["Военный альянс трёх государств предлагает нам присоединиться против общего врага.","Вступить в альянс и получить поддержку","Остаться нейтральными — не наша война"],
+    ["Соседний правитель умер. Два претендента на трон просят нашей поддержки.","Поддержать сильного претендента, который нам выгоден","Держаться в стороне от чужих дел"],
+    // === НАУКА И КУЛЬТУРА ===
+    ["Странствующий изобретатель предлагает новый способ плавки металла — вдвое быстрее и дешевле.","Купить изобретение для государственных кузниц","Дать изобретателю мастерскую и посмотреть, что выйдет"],
+    ["Историки просят разрешения написать правдивую историю страны — включая неприятные факты.","Разрешить писать правдивую историю","Велеть писать только то, что выгодно власти"],
+    ["В стране появился великий художник — его картины известны во всём мире. Он просит покровительства.","Взять художника под покровительство и платить жалованье","Пусть сам зарабатывает — дел важнее хватает"],
+    ["Учёные открыли способ предсказывать погоду на месяц вперёд. Нужно финансирование.","Финансировать создание сети метеорологических станций","Отказать — деньги нужнее на другие нужды"],
+    ["Книгопечатник изобрёл новый станок — книги стали в 10 раз дешевле. Церковь против.","Поддержать печатника и распространение книг","Ограничить печать, чтобы не злить церковь"],
+    // === РАЗНОЕ / НЕОЖИДАННЫЕ ===
+    ["Огромный медведь-людоед терроризирует три деревни уже две недели. Жители в панике.","Послать отряд охотников для уничтожения зверя","Огородить деревни высоким забором — пусть медведь уйдёт сам"],
+    ["Крестьянин нашёл на своём поле горшок с древними золотыми монетами — целое состояние.","Объявить клад государственной собственностью","Отдать клад крестьянину — нашёл — его"],
+    ["Цыганский табор расположился у столицы — жители жалуются на кражи, но доказательств нет.","Приказать табору убраться от столицы","Провести расследование, прежде чем выгонять людей"],
+    ["Астроном объявил: через месяц будет полное затмение солнца. Народ в суеверном страхе.","Объяснить народу научную природу затмения","Устроить праздник, объявив затмение добрым знаком"],
+    ["Кузнецы создали новый тип стальных доспехов — лёгкие и прочные. Стоят очень дорого.","Закупить новые доспехи для всей армии","Закупить только для элитной гвардии, остальным — старые"],
+    ["Колодец в центре столицы вдруг забил горячей водой с лечебными свойствами.","Построить купальни для народа — бесплатно","Сдать купальни в аренду — пусть приносят доход"],
+    ["Странствующий монах объявил конец света через год. Тысячи людей бросают работу и молятся.","Арестовать монаха за распространение паники","Игнорировать — само пройдёт, когда ничего не случится"],
+    ["Рыбаки поймали невиданное морское существо. Народ требует его показать.","Устроить бесплатный показ для всего народа","Продать существо иностранным учёным за большие деньги"],
+    ["Принц вернулся из похода и привёз иностранную невесту — простолюдинку. Знать возмущена.","Поддержать выбор принца — любовь важнее происхождения","Потребовать от принца расторгнуть помолвку"],
+    ["Гробницу древнего царя вскрыли строители при прокладке дороги. Народ требует перезахоронения.","Перезахоронить останки с почестями, дорогу проложить в обход","Продолжить строительство — прошлое не важнее настоящего"],
+    ["Управляющий южных провинций отказывается ехать в столицу по вызову — уже три месяца.","Послать армейский эскорт и привезти его силой","Заменить управляющего, назначить нового"],
+    ["Странная звезда с хвостом видна каждую ночь. Астрологи спорят о её значении.","Устроить пышный праздник — объявить звезду добрым знаком","Велеть учёным изучить звезду и дать научное объяснение"],
+    ["Крысы нашествием захватили государственные зернохранилища. Запасы под угрозой.","Нанять специальных истребителей крыс и кошек","Срочно переместить зерно в новые хранилища"],
+    ["Мастер-строитель предлагает заменить деревянные мосты каменными — дорого, но надёжно.","Начать замену всех мостов на каменные","Починить старые деревянные — пока сойдёт"],
+    ["Голуби-почтальоны, которых используют для связи, вдруг начали исчезать — кто-то ловит их.","Расследовать кражу почтовых голубей","Перейти на конных гонцов до выяснения ситуации"],
+    // === ТОРГОВЛЯ И РЕМЁСЛА ===
+    ["Гончары просят снизить налог на глину — иначе не смогут содержать мастерские.","Снизить налог на глину для гончаров","Отказать — все платят одинаково"],
+    ["Купец из дальней страны привёз неизвестный злак, который даёт втрое больше урожая.","Купить семена и раздать крестьянам","Сначала испытать злак на небольшом поле"],
+    ["Ткачи изобрели новый ткацкий станок, но цеховые мастера против — говорят, лишит работы половину.","Разрешить новый станок — прогресс важен","Запретить пока — нельзя оставить людей без работы"],
+    ["Виноделы жалуются: в этом году виноград погиб от мороза, нечего продавать.","Освободить виноделов от налогов на год","Предложить им перейти на другие культуры"],
+    ["Соль стала дефицитом — единственная шахта затоплена. Мясо и рыба гниют без засолки.","Срочно привезти соль из других стран за золото","Откачать воду из шахты — займёт несколько месяцев"],
+    // === АРМИЯ И БЕЗОПАСНОСТЬ ===
+    ["Разведчики сообщают: в горах скрывается лагерь шпионов соседнего государства.","Атаковать лагерь и уничтожить шпионов","Начать слежку за лагерем и узнать их цели"],
+    ["Тюрьма переполнена — там вдвое больше людей, чем она рассчитана вместить.","Построить новую тюрьму за государственный счёт","Помиловать мелких преступников и освободить места"],
+    ["Пограничный гарнизон просит подкреплений — там неспокойно после прихода кочевников.","Отправить дополнительные войска на границу","Велеть гарнизону держаться своими силами"],
+    ["Оружейники сообщают: запасы стрел и арбалетных болтов почти иссякли.","Срочно наладить массовое производство стрел","Закупить оружие у иностранных поставщиков"],
+    ["Предатель продал карты наших крепостей врагу. Нужно менять все укрепления.","Спешно изменить расположение укреплений","Сначала поймать предателя, потом думать о крепостях"],
+    // === ЗДОРОВЬЕ И МЕДИЦИНА ===
+    ["Лекари просят разрешения вскрывать тела умерших для изучения болезней. Церковь против.","Разрешить вскрытия ради медицины","Запретить — не будем злить церковь и народ"],
+    ["Неизвестная болезнь поражает скот — уже погибла треть всех животных в стране.","Немедленно ввести карантин скота и запретить торговлю мясом","Нанять лучших врачей для животных для поиска лечения"],
+    ["Вода в реке, из которой пьёт столица, стала мутной и вонючей — кто-то загрязняет исток.","Послать солдат охранять исток реки","Построить систему очистки воды перед городом"],
+    ["Знахарка объявила, что нашла способ вылечить любую болезнь — но метод страшно дорог.","Купить у неё метод лечения для народа","Провести проверку — не шарлатанка ли она"],
+    // === РЕЛИГИЯ ===
+    ["Два монастыря поспорили из-за священной священного предмета и готовы начать открытую войну.","Конфисковать священный предмет, поместить в государственное хранилище","Назначить церковный суд для разбора спора"],
+    ["Верующие путники со всей страны идут в дальний монастырь — дороги разбиты тысячами людей.","Построить нормальную дорогу к монастырю","Ввести плату за религиозное путешествие для ремонта дорог"],
+    ["Запрещённое церковью учение распространяется среди народа — церковь требует арестовать проповедников.","Арестовать проповедников по требованию церкви","Выслушать проповедников — может, они и правы"],
+    // === ФИНАНСЫ ===
+    ["Казначей предлагает ввести новый налог на роскошь — дорогие платья, украшения, лошадей.","Ввести налог на роскошь знати","Отказать — знать и так много платит"],
+    ["Купеческие дома просят создать государственный банк для безопасного хранения золота.","Создать государственный банк","Отказать — государство не должно в это лезть"],
+    ["Государственный долг вырос до опасного уровня. Кредиторы требуют возврата.","Поднять налоги для выплаты долга","Объявить перенос выплат — договориться об отсрочке"],
+  ];
+  return ECACHE;
+}
+
+// ==================== QUESTS (rich, diverse) ====================
+const QUESTS=[
+  {title:"КРИЗИС В ШАХТАХ",art:"mine",text:"Старые шахты иссякают. Рабочие голодают. Что предпримете?",choices:["Отправить тысячи рабочих","Нанять опытных мастеров","Бросить шахты совсем"],effects:[{n:-2,p:3,a:0,g:-4},{n:-1,p:-1,a:0,g:7},{n:5,p:-2,a:0,g:2}]},
+  {title:"НАБЕГ ВАРВАРОВ",art:"soldier",text:"С севера идут тысячи варваров. Столица в смертельной опасности!",choices:["Выслать всю армию","Построить защитные стены","Договориться о мире"],effects:[{n:0,p:-2,a:6,g:-4},{n:-3,p:3,a:-2,g:-6},{n:0,p:2,a:-2,g:5}]},
+  {title:"ГОЛОД В ПРОВИНЦИИ",art:"farmer",text:"Три восточные провинции голодают третий месяц. Люди бегут в города.",choices:["Послать обозы с зерном","Снизить налоги надолго","Оставить на волю судьбы"],effects:[{n:0,p:6,a:0,g:-6},{n:0,p:4,a:0,g:-3},{n:-6,p:-5,a:1,g:2}]},
+  {title:"ТОРГОВЫЙ СОЮЗ",art:"merchant",text:"Купеческий союз трёх королевств предлагает торговый пакт на 10 лет.",choices:["Принять все условия пакта","Потребовать лучших условий","Отказаться от союза"],effects:[{n:0,p:3,a:0,g:9},{n:-2,p:1,a:0,g:5},{n:2,p:-2,a:0,g:-2}]},
+  {title:"ДРАКОН НА ГОРЕ",art:"dragon",text:"Огромный дракон поселился в горах близ деревни. Народ в панике, деревни горят!",choices:["Послать отряд героев","Выкупиться золотом","Отселить все деревни"],effects:[{n:4,p:3,a:-5,g:-3},{n:-3,p:2,a:0,g:-9},{n:2,p:-4,a:0,g:-2}]},
+  {title:"МОРСКАЯ ЭКСПЕДИЦИЯ",art:"ship",text:"Опытные мореходы готовы к дальнему плаванию за новыми землями.",choices:["Полностью финансировать","Дать часть средств","Запретить экспедицию"],effects:[{n:-2,p:2,a:0,g:10},{n:-1,p:1,a:0,g:4},{n:2,p:-2,a:0,g:1}]},
+  {title:"ЧУМНОЙ ТОРГОВЕЦ",art:"plague",text:"С торговым обозом пришла страшная болезнь. Уже три деревни вымерли.",choices:["Ввести строгий карантин","Полностью прекратить торговлю","Лечить всех за счёт казны"],effects:[{n:4,p:-2,a:0,g:-2},{n:2,p:-2,a:0,g:-1},{n:0,p:4,a:0,g:-8}]},
+  {title:"УРОЖАЙ ВЕКА",art:"harvest",text:"Невиданный в истории урожай! Закрома ломятся. Чем распорядиться?",choices:["Заполнить все государственные закрома","Продать соседним королевствам","Раздать всем крестьянам даром"],effects:[{n:-2,p:2,a:0,g:4},{n:-4,p:0,a:0,g:11},{n:4,p:6,a:0,g:-2}]},
+  {title:"МЯТЕЖ БАРОНОВ",art:"castle",text:"Семь могущественных знатных землевладельцев юга объединились и подняли открытый бунт!",choices:["Военный поход немедля","Пойти на переговоры","Разделить с ними власть"],effects:[{n:0,p:-2,a:7,g:-6},{n:0,p:2,a:-2,g:-2},{n:0,p:4,a:-4,g:-2}]},
+  {title:"ТАЙНЫЙ ОРДЕН",art:"mage",text:"Древний тайный орден магов предлагает знания в обмен на покровительство.",choices:["Принять их знания","Изгнать орден из страны","Взять полностью под контроль"],effects:[{n:4,p:2,a:0,g:-4},{n:0,p:-2,a:3,g:0},{n:-2,p:0,a:0,g:-2}]},
+  {title:"РАЗБОЙНИК НА ТРАКТЕ",art:"bandit",text:"Знаменитый разбойник Рыжий Волк захватил главный торговый путь. Купцы в страхе.",choices:["Арестовать силой армии","Переманить на государственную службу","Объявить всеобщую амнистию"],effects:[{n:0,p:2,a:4,g:-4},{n:0,p:1,a:2,g:-2},{n:0,p:4,a:-2,g:-2}]},
+  {title:"ВЕЛИКОЕ НАВОДНЕНИЕ",art:"flood",text:"Река вышла из берегов. Двадцать деревень затоплены, люди тонут!",choices:["Немедленная эвакуация всех","Построить дамбы любой ценой","Помолиться за спасение"],effects:[{n:5,p:-1,a:0,g:-4},{n:2,p:2,a:0,g:-7},{n:-9,p:-4,a:0,g:0}]},
+  {title:"КУЗНЕЧНЫЙ ЦЕХ",art:"forge",text:"Объединённый кузнечный цех требует государственной поддержки. Угрожают забастовкой.",choices:["Выдать большую субсидию","Дать налоговые льготы","Категорически отказать"],effects:[{n:0,p:2,a:5,g:-6},{n:0,p:3,a:3,g:-2},{n:0,p:-2,a:-2,g:4}]},
+  {title:"БАШНИ НАБЛЮДЕНИЯ",art:"tower",text:"Военные советники предлагают построить сеть сторожевых башен по всей границе.",choices:["Одобрить полное строительство","Построить лишь половину","Не тратить деньги вообще"],effects:[{n:-3,p:0,a:7,g:-7},{n:-1,p:0,a:4,g:-4},{n:2,p:0,a:-2,g:2}]},
+  {title:"КОРОННЫЕ ЗЕМЛИ",art:"crown",text:"Острый спор о коронных землях разгорелся между дворянами и крестьянами.",choices:["Национализировать все земли","Передать землю баронам","Роздать земли крестьянам"],effects:[{n:0,p:0,a:-2,g:8},{n:0,p:-3,a:4,g:3},{n:4,p:7,a:-2,g:-4}]},
+  {title:"АКАДЕМИЯ НАУК",art:"wizard",text:"Учёные просят основать Академию наук и выделить средства на исследования.",choices:["Основать Академию","Дать частичное финансирование","Отказать учёным"],effects:[{n:2,p:2,a:0,g:-7},{n:1,p:2,a:0,g:-3},{n:0,p:-1,a:0,g:2}]},
+  {title:"ЭПИДЕМИЯ СКОТА",art:"plague",text:"Болезнь выкосила половину скота в стране. Голод уже близко.",choices:["Купить скот у соседей","Ввести жёсткий карантин","Организовать государственные стада"],effects:[{n:-2,p:3,a:0,g:-8},{n:2,p:-1,a:0,g:-2},{n:-1,p:2,a:0,g:-5}]},
+  {title:"СОЛЯНОЙ КРИЗИС",art:"mine",text:"Государственные соляные шахты истощились. Соль — основа хранения пищи!",choices:["Купить соль у купцов","Разведать новые месторождения","Ввести соляной налог"],effects:[{n:0,p:2,a:0,g:-5},{n:-2,p:0,a:0,g:-2},{n:0,p:-2,a:0,g:4}]},
+  {title:"ПРИШЛЫЕ БЕЖЕНЦЫ",art:"farmer",text:"Сто тысяч беженцев из горящей страны просят убежища у границ.",choices:["Принять всех беженцев","Принять лишь часть","Закрыть границы полностью"],effects:[{n:-2,p:8,a:-1,g:-4},{n:-1,p:4,a:0,g:-2},{n:1,p:-2,a:2,g:1}]},
+  {title:"ЛЕСНАЯ ВЫРУБКА",art:"harvest",text:"Лесопромышленники просят разрешения вырубить Великий лес ради древесины.",choices:["Разрешить полную вырубку","Ограниченная вырубка","Запретить и охранять лес"],effects:[{n:-12,p:0,a:0,g:9},{n:-5,p:0,a:0,g:4},{n:10,p:2,a:0,g:-2}]},
+  {title:"НОВЫЙ ПОРТ",art:"ship",text:"Купцы предлагают построить новый торговый порт на западном берегу.",choices:["Построить великий порт","Малый торговый причал","Отказаться от строительства"],effects:[{n:-3,p:2,a:0,g:9},{n:-1,p:1,a:0,g:4},{n:1,p:0,a:0,g:-1}]},
+  {title:"ВЕЛИКИЙ ТУРНИР",art:"soldier",text:"Рыцари требуют организовать Великий Турнир для поднятия боевого духа.",choices:["Организовать грандиозный турнир","Скромные состязания","Отменить все турниры"],effects:[{n:0,p:4,a:4,g:-6},{n:0,p:2,a:2,g:-2},{n:0,p:-2,a:-1,g:3}]},
+  {title:"ПРЕДАТЕЛЬСТВО В АРМИИ",art:"skull",text:"Раскрыт заговор офицеров, которые продавали военные секреты врагу!",choices:["Казнить всех предателей","Показательный суд","Тайно выслать из страны"],effects:[{n:0,p:-2,a:4,g:-2},{n:0,p:2,a:2,g:-2},{n:0,p:0,a:-1,g:2}]},
+  {title:"ИЗВЕРЖЕНИЕ ВУЛКАНА",art:"volcano",text:"Вулкан на востоке начал извергаться! Пепел засыпает поля трёх провинций.",choices:["Массовая эвакуация людей","Строить защитные укрепления","Молиться и ждать"],effects:[{n:-3,p:-1,a:0,g:-5},{n:-4,p:0,a:0,g:-7},{n:-10,p:-4,a:0,g:-1}]},
+  {title:"ТАЙНАЯ БИБЛИОТЕКА",art:"wizard",text:"Обнаружена тайная библиотека с запрещёнными знаниями древних цивилизаций.",choices:["Изучить все свитки","Запечатать и охранять","Сжечь опасные знания"],effects:[{n:2,p:2,a:2,g:-2},{n:1,p:0,a:0,g:-1},{n:-2,p:-1,a:0,g:2}]},
+  {title:"ЗАМОРСКИЕ ОСТРОВА",art:"ship",text:"Мореплаватели открыли богатые острова. Туземцы настроены мирно.",choices:["Основать колонию немедля","Установить торговые связи","Держаться подальше"],effects:[{n:-4,p:0,a:2,g:10},{n:-1,p:2,a:0,g:6},{n:2,p:0,a:0,g:0}]},
+  {title:"ВЕЛИКИЙ МОСТ",art:"tower",text:"Инженеры предлагают построить мост через широкую реку, разделяющую страну.",choices:["Строить великий мост!","Построить паромную переправу","Не тратить казну"],effects:[{n:-2,p:2,a:0,g:-8},{n:-1,p:1,a:0,g:-3},{n:1,p:0,a:0,g:2}]},
+  {title:"ОРДА С ВОСТОКА",art:"soldier",text:"Разведчики сообщают: огромная орда движется с востока. До границы — три недели!",choices:["Немедленно собрать войска","Построить оборонительный вал","Выкупиться огромной данью"],effects:[{n:0,p:-2,a:9,g:-7},{n:-2,p:0,a:5,g:-9},{n:0,p:2,a:-2,g:-10}]},
+  {title:"ДВОРЦОВЫЕ ИНТРИГИ",art:"crown",text:"Советники доносят: при дворе плетётся паутина опасных интриг против вас!",choices:["Заменить всех советников","Провести тайное расследование","Притвориться незнающим"],effects:[{n:0,p:0,a:2,g:-4},{n:0,p:2,a:0,g:-2},{n:0,p:-2,a:-1,g:2}]},
+  {title:"РЕФОРМА НАЛОГОВ",art:"merchant",text:"Министры предлагают полную реформу налоговой системы. Риски огромны.",choices:["Принять все реформы","Реформировать постепенно","Оставить систему как есть"],effects:[{n:0,p:2,a:0,g:7},{n:0,p:1,a:0,g:4},{n:0,p:-1,a:0,g:-1}]},
+];
+
+// Quest fill to 300
+const QT=[
+  {title:"ПОЖАР В {0}",art:"forge",text:"Огонь охватил {0}. Тысячи людей в опасности!",choices:["Бросить все силы на тушение","Оцепить и не пустить людей","Срочно переселить жителей"],effects:[{n:2,p:-1,a:0,g:-2},{n:-1,p:0,a:1,g:-1},{n:0,p:2,a:0,g:-4}]},
+  {title:"ЗАСУХА В {0}",art:"farmer",text:"Смертельная засуха поразила {0}. Колодцы пересохли.",choices:["Открыть государственные резервы","Купить воду у соседей","Молиться о дожде"],effects:[{n:-4,p:2,a:0,g:-4},{n:0,p:3,a:0,g:-7},{n:-9,p:-3,a:0,g:0}]},
+  {title:"ВОЙСКА У {0}",art:"soldier",text:"Вражеские войска осадили {0}. Защитники держатся.",choices:["Атаковать немедля","Держать долгую оборону","Открыть переговоры"],effects:[{n:0,p:-2,a:6,g:-5},{n:0,p:0,a:3,g:-2},{n:0,p:2,a:-2,g:-2}]},
+  {title:"КЛАД В {0}",art:"mine",text:"Пастух нашёл огромный клад в {0}. Что делать с находкой?",choices:["Всё забрать в государственную казну","Наградить нашедшего щедро","Скрыть от всех"],effects:[{n:0,p:-1,a:0,g:9},{n:0,p:4,a:0,g:5},{n:0,p:-2,a:0,g:7}]},
+];
+const PN=["лесу","горах","степи","деревне","городе","замке","порту","шахтах","болоте","равнине","ущелье","долине"];
+while(QUESTS.length<300){const t=QT[QUESTS.length%QT.length];const p=PN[QUESTS.length%PN.length];QUESTS.push({title:t.title.replace('{0}',p.toUpperCase()),art:t.art,text:t.text.replace(/\{0\}/g,p),choices:[...t.choices],effects:t.effects.map(e=>({...e}))});}
+
+// ==================== CRISIS EVENTS ====================
+const CRISIS=[
+  {title:"ОБЪЯВИТЬ ВОЙНУ?",art:"bomb",text:"Соседнее королевство давно оскорбляет нас. Момент идеален — наша армия сильна. Война изменит историю!",choices:["⚔️ ОБЪЯВИТЬ ВОЙНУ","🕊️ СОХРАНИТЬ МИР","🗡️ ТАЙНАЯ ДИВЕРСИЯ"],effects:[{n:-5,p:-4,a:10,g:-10},{n:2,p:2,a:-2,g:5},{n:-2,p:0,a:3,g:-5}]},
+  {title:"СЕКРЕТНОЕ ОРУЖИЕ",art:"bomb",text:"Изобретатель создал разрушительное оружие. Оно может уничтожить целый город врага — и наш тоже.",choices:["Применить оружие!","Уничтожить изобретение","Держать как угрозу"],effects:[{n:-8,p:-3,a:11,g:-4},{n:5,p:2,a:-3,g:-2},{n:2,p:0,a:4,g:-3}]},
+  {title:"ПУСТАЯ КАЗНА",art:"crown",text:"Казна пуста. Армия не получала зарплата три месяца. Солдаты могут поднять бунт!",choices:["Поднять налоги вдвое","Распустить половину армии","Занять у иноземцев"],effects:[{n:0,p:-5,a:0,g:11},{n:2,p:3,a:-9,g:3},{n:0,p:2,a:0,g:9}]},
+  {title:"НАРОДНОЕ ВОССТАНИЕ",art:"skull",text:"Народ взбунтовался против тяжёлых налогов! Толпы идут к дворцу. Баррикады строятся.",choices:["Силой подавить восстание","Немедленно отменить налоги","Уйти в отставку — назначить регента"],effects:[{n:-3,p:-7,a:5,g:-3},{n:0,p:7,a:-2,g:-8},{n:0,p:5,a:-4,g:0}]},
+  {title:"МОНАРХИЯ ИЛИ ДЕМОКРАТИЯ?",art:"crown",text:"Философы и народ требуют ввести парламент. Знать грозит переворотом. Момент выбора настал!",choices:["Ввести парламент","Усилить монархию","Монархия с ограниченными правами короля"],effects:[{n:2,p:8,a:-3,g:-2},{n:0,p:-4,a:6,g:4},{n:1,p:4,a:0,g:-1}]},
+  {title:"ЧЁРНАЯ СМЕРТЬ",art:"plague",text:"Страшная эпидемия охватила половину страны. Умирают тысячи. Врачи беспомощны.",choices:["Жёсткий карантин всей страны","Лечить всех государственным золотом","Бежать из заражённых районов"],effects:[{n:2,p:-9,a:-2,g:-3},{n:0,p:-4,a:0,g:-11},{n:4,p:-7,a:-1,g:0}]},
+  {title:"ВЕЛИКОЕ ПРЕДАТЕЛЬСТВО",art:"skull",text:"Ближайший советник тайно работал на врага. Он передал все военные секреты! Что делать?",choices:["Публичная казнь изменника","Тайное заключение","Обменять на нашего шпиона"],effects:[{n:0,p:-1,a:5,g:-2},{n:0,p:0,a:2,g:-1},{n:0,p:2,a:4,g:0}]},
+  {title:"НАШЕСТВИЕ САРАНЧИ",art:"harvest",text:"Тучи саранчи уничтожили всё зерно. Три урожая подряд провалились. Голод неизбежен.",choices:["Покупать зерно за любые деньги","Организовать охоту на саранчу","Искать новые пахотные земли"],effects:[{n:-4,p:2,a:0,g:-12},{n:-6,p:2,a:0,g:-5},{n:-9,p:0,a:0,g:-6}]},
+  {title:"СОЮЗ ДВУХ КОРОЛЕВСТВ",art:"castle",text:"Великое соседнее королевство предлагает полный союз с браком между нашими наследниками.",choices:["Принять союз и брак","Только политический союз","Гордо отвергнуть"],effects:[{n:0,p:5,a:4,g:8},{n:0,p:2,a:2,g:5},{n:2,p:-2,a:2,g:0}]},
+  {title:"ТЕХНОЛОГИЯ БУДУЩЕГО",art:"wizard",text:"Изобретатель создал невиданную машину, которая может изменить весь облик страны.",choices:["Вложить всё золото в изобретение","Разрешить частное применение","Запретить как колдовство"],effects:[{n:-3,p:2,a:2,g:11},{n:-1,p:2,a:0,g:5},{n:2,p:-2,a:0,g:-2}]},
+];
+
+function eventEffect(ci,et){const s=(et.charCodeAt(0)||5)+ci*31;const rn=(s,mn,mx)=>{let x=(s*1664525+1013904223)&0xffffffff;return mn+((x>>>0)%(mx-mn+1));};if(ci===0)return{n:rn(s,-7,8),p:rn(s+1,-7,6),a:rn(s+2,-5,6),g:rn(s+3,-9,6)};return{n:rn(s+10,-9,5),p:rn(s+11,-8,5),a:rn(s+12,-7,7),g:rn(s+13,-10,5)};}
+
+// ==================== UI ====================
+function calcStability(){
+  // Stability = average of all 4 resources, penalised if any is critical
+  const avg=(G.nature+G.people+G.army+G.gold)/4;
+  const minR=Math.min(G.nature,G.people,G.army,G.gold);
+  // If any resource is below 20, stability tanks hard
+  const penalty=minR<20?(20-minR)*1.5:0;
+  return Math.max(0,Math.min(100,Math.round(avg-penalty)));
+}
+function updateUI(){
+  document.getElementById('year-val').textContent=G.year;
+  document.getElementById('turns-val').textContent=G.turns;
+  document.getElementById('days-val').textContent=G.totalDays;
+  document.getElementById('fame-val').textContent=G.fame;
+  updateBar('nature',G.nature,'%');
+  updateBar('people',G.people,' тыс.');
+  updateBar('army',G.army,' тыс.');
+  updateBar('gold',G.gold,' тыс.');
+  // Stability
+  G.stability=calcStability();
+  const sf=document.getElementById('stab-bar-fill');
+  sf.style.width=G.stability+'%';
+  sf.style.background=G.stability<=20?'var(--red)':G.stability<=40?'var(--yellow)':'var(--accent)';
+  document.getElementById('stab-val').textContent=G.stability+'%';
+  renderThreats();
+}
+function updateBar(n,v,s){const p=Math.max(0,Math.min(100,v));const b=document.getElementById('bar-'+n);b.style.width=p+'%';b.className='bar-fill'+(p<=15?' danger':p<=30?' warning':'');document.getElementById('res-'+n+'-val').textContent=v+s;}
+function flashResource(n,pos){const e=document.getElementById('res-'+n+'-val');e.classList.remove('flash-green','flash-red');void e.offsetWidth;e.classList.add(pos?'flash-green':'flash-red');}
+function applyEffect(ef){
+  const parts=[];
+  const n=ef.n<0?ef.n*2:ef.n;
+  const p=ef.p<0?ef.p*2:ef.p;
+  const a=ef.a<0?ef.a*2:ef.a;
+  const g=ef.g<0?ef.g*2:ef.g;
+  if(n){G.nature=clamp(G.nature+n);flashResource('nature',n>0);parts.push((n>0?'▲ Природа +':n<0?'▼ Природа ':'')+n+'%');}
+  if(p){G.people=clamp(G.people+p);flashResource('people',p>0);parts.push((p>0?'▲ Народ +':p<0?'▼ Народ ':'')+Math.abs(p)+' тыс.');}
+  if(a){G.army=clamp(G.army+a);flashResource('army',a>0);parts.push((a>0?'▲ Армия +':a<0?'▼ Армия ':'')+Math.abs(a)+' тыс.');}
+  if(g){G.gold=clamp(G.gold+g);flashResource('gold',g>0);parts.push((g>0?'▲ Казна +':g<0?'▼ Казна ':'')+Math.abs(g)+' тыс.');}
+  updateUI();return parts.join(', ');
+}
+function renderThreats(){
+  G.threats=G.threats||[];
+  const list=document.getElementById('threat-list');
+  const empty=document.getElementById('threat-empty');
+  if(G.threats.length===0){if(empty)empty.style.display='block';list.querySelectorAll('.threat-item').forEach(e=>e.remove());return;}
+  if(empty)empty.style.display='none';
+  list.querySelectorAll('.threat-item').forEach(e=>e.remove());
+  G.threats.slice(0,5).forEach(t=>{
+    const d=document.createElement('div');
+    d.className='threat-item'+(t.turns<=2?' threat-critical':'');
+    d.innerHTML=`<span class="threat-icon">${t.icon}</span><div class="threat-body"><span class="threat-name">${t.name}</span><span class="threat-desc">${t.desc}</span></div><span class="threat-timer">${t.turns} ход.</span>`;
+    list.appendChild(d);
+  });
+}
+
+// Threat pool — persistent threats that countdown each turn and fire if not solved
+const THREAT_POOL=[
+  {icon:'☠️',name:'ГОЛОДНЫЙ БУНТ',desc:'Нехватка еды в провинциях',eff:{p:-12,g:-4},turns:5,condition:g=>g.people<35},
+  {icon:'💀',name:'МЯТЕЖ АРМИИ',desc:'Солдаты не получают жалованья',eff:{a:-15,g:-6},turns:4,condition:g=>g.gold<20&&g.army>5},
+  {icon:'🔥',name:'ЭКОЛОГИЧЕСКИЙ КОЛЛАПС',desc:'Природа на грани уничтожения',eff:{n:-12,p:-4},turns:5,condition:g=>g.nature<25},
+  {icon:'💸',name:'КАЗНА НА НУЛЕ',desc:'Государство не может платить долги',eff:{g:-10,a:-5,p:-3},turns:4,condition:g=>g.gold<15},
+  {icon:'⚔️',name:'ВТОРЖЕНИЕ',desc:'Враги нападают в слабый момент',eff:{a:-12,p:-6},turns:4,condition:g=>g.army<18&&g.stability<40},
+  {icon:'🦠',name:'ЭПИДЕМИЯ',desc:'Болезнь косит ряды народа',eff:{p:-14,n:-3},turns:5,condition:g=>g.people<30&&g.gold<30},
+  {icon:'🌑',name:'АНАРХИЯ',desc:'Власть теряет контроль',eff:{p:-8,a:-8,g:-8},turns:3,condition:g=>g.stability<20},
+  {icon:'🌊',name:'СТИХИЙНОЕ БЕДСТВИЕ',desc:'Природа мстит за варварство',eff:{n:-10,p:-5,g:-6},turns:5,condition:g=>g.nature<20},
+];
+
+function tickThreats(){
+  G.threats=G.threats||[];
+  // Check if new threats should spawn
+  THREAT_POOL.forEach(tp=>{
+    const already=G.threats.find(t=>t.name===tp.name);
+    if(!already && tp.condition(G) && Math.random()<0.55){
+      G.threats.push({...tp,turns:tp.turns});
+      addLog('⚠ Новая угроза: '+tp.name+'!','crisis');
+    }
+  });
+  // Countdown existing threats and fire expired ones
+  const fired=[];
+  G.threats=G.threats.filter(t=>{
+    // Remove threat if condition no longer applies
+    const tp=THREAT_POOL.find(p=>p.name===t.name);
+    if(tp && !tp.condition(G)){return false;}
+    t.turns--;
+    if(t.turns<=0){fired.push(t);return false;}
+    return true;
+  });
+  fired.forEach(t=>{
+    const parts=applyEffect(t.eff);
+    addLog('💥 УГРОЗА СРАБОТАЛА: '+t.name+'! '+parts,'bad');
+    sfxBad();
+  });
+  return fired.length>0;
+}
+
+// Passive decay each turn — resources slowly drain if neglected
+function applyDecay(){
+  const decayList=[];
+  // Base decay per turn
+  let dn=0,dp=0,da=0,dg=0;
+
+  // Nature slowly decays unless high (industry pressure)
+  if(G.nature>20) dn-=(G.nature>60?2:1);
+
+  // People decay if gold or nature is low (can't sustain population)
+  if(G.gold<30) dp-=1;
+  if(G.nature<30) dp-=1;
+
+  // Army deserts if not paid (gold low)
+  if(G.gold<25 && G.army>5) da-=2;
+  else if(G.gold<40 && G.army>10) da-=1;
+
+  // Gold drain from upkeep (army costs money each turn)
+  dg -= Math.ceil(G.army/20); // 1 per 20k soldiers
+  if(G.people<25) dg-=1; // low population = low tax income
+
+  // Apply decay
+  if(dn){G.nature=clamp(G.nature+dn);decayList.push('Природа '+dn+'%');}
+  if(dp){G.people=clamp(G.people+dp);decayList.push('Народ '+dp+' тыс.');}
+  if(da){G.army=clamp(G.army+da);decayList.push('Армия '+da+' тыс.');}
+  if(dg){G.gold=clamp(G.gold+dg);decayList.push('Казна '+dg+' тыс.');}
+
+  if(decayList.length>0){
+    updateUI();
+    addLog('📉 Распад: '+decayList.join(', ')+'.');
+  }
+}
+
+function clamp(v){return Math.max(0,Math.min(100,v));}
+function addLog(msg,type){const ul=document.getElementById('log-list');const li=document.createElement('li');li.textContent=msg;if(type==='good')li.classList.add('log-good');if(type==='bad')li.classList.add('log-bad');if(type==='crisis')li.classList.add('log-crisis');ul.insertBefore(li,ul.firstChild);while(ul.children.length>7)ul.removeChild(ul.lastChild);}
+let _twInterval=null;
+function typewrite(el,text,cb){
+  if(_twInterval){clearInterval(_twInterval);_twInterval=null;}
+  el.textContent='';el.classList.add('typewriter-cursor');let i=0;
+  _twInterval=setInterval(()=>{if(i<text.length){el.textContent+=text[i++];}else{clearInterval(_twInterval);_twInterval=null;el.classList.remove('typewriter-cursor');if(cb)cb();}},18);
+}
+
+function setNextBtnState(enabled){const b=document.getElementById('next-btn-main');b.disabled=!enabled;}
+
+// ==================== NEXT TURN ====================
+function nextTurn(){
+  if(G.gameOver||G.waitingForChoice)return;
+  sfxNextTurn();
+
+  const days=8+Math.floor(Math.random()*14);
+  G.turns++;G.totalDays+=days;
+  let yearInc;
+  if(G.year>=2000){yearInc=1+Math.random();}
+  else if(G.year>=1800){yearInc=3+Math.random()*4;}
+  else{yearInc=days/365;}
+  G.fractYear+=yearInc;G.year=Math.floor(G.fractYear);
+
+  const yEl=document.getElementById('year-val');
+  yEl.classList.remove('slot-spin');void yEl.offsetWidth;yEl.classList.add('slot-spin');
+  const df=document.getElementById('days-flash');df.textContent='+'+days+' дн.';df.classList.remove('show');void df.offsetWidth;df.classList.add('show');
+
+  // === PASSIVE DECAY (runs every turn) ===
+  applyDecay();
+
+  // === TICK THREATS (countdown + fire expired) ===
+  tickThreats();
+
+  updateUI();addLog('+'+days+' дн. Год '+G.year+'.');
+
+  if(G.year>=2300){winGame();return;}
+  if(G.totalDays>=G.epochThreshold){triggerEpoch();return;}
+  if(checkDefeat())return;
+
+  // Decide event type — crises more frequent, quests more frequent
+  const sinceQuest=G.turns-G.lastQuestTurn;
+  const sinceCrisis=G.turns-G.lastCrisisTurn;
+  const questInterval=3+Math.floor(Math.random()*3);  // was 4+rand(4)
+  const crisisInterval=8+Math.floor(Math.random()*7); // was 15+rand(10)
+
+  // Extra crisis chance if stability is low
+  const crisisChance=G.stability<40?0.55:G.stability<60?0.38:0.25;
+
+  if(sinceCrisis>=crisisInterval && G.turns>5 && Math.random()<crisisChance){
+    showCrisis();
+  } else if(sinceQuest>=questInterval && sinceQuest>=3){
+    showQuest();
+  } else if(checkRipples()){
+    // ripple event shown
+  } else if(Math.random()<0.10 && G.turns>3){
+    showNeighborEvent();
+  } else {
+    showEvent();
+  }
+}
+
+// ==================== NEIGHBOR EVENTS ====================
+const NEIGHBORS=[
+  {name:"Западное Королевство",art:"castle"},
+  {name:"Северная Империя",art:"soldier"},
+  {name:"Восточный Султанат",art:"merchant"},
+  {name:"Южная Республика",art:"ship"},
+  {name:"Горная Конфедерация",art:"tower"},
+];
+const NEIGHBOR_EVENTS=[
+  {type:'gift', text:'{n} прислало щедрые дары в знак дружбы!', eff:{n:0,p:2,a:0,g:6}, badge:'🎁 ПОДАРОК', color:'good'},
+  {type:'gift', text:'{n} направило обоз с зерном для нашего народа.', eff:{n:1,p:3,a:0,g:0}, badge:'🌾 ДАР', color:'good'},
+  {type:'gift', text:'{n} предложило военный союз и прислало отряд воинов.', eff:{n:0,p:0,a:4,g:2}, badge:'⚔️ СОЮЗ', color:'good'},
+  {type:'raid', text:'{n} устроило набег на приграничные деревни!', eff:{n:-2,p:-2,a:-2,g:-4}, badge:'🔥 НАБЕГ', color:'bad'},
+  {type:'raid', text:'{n} заблокировало торговые пути. Казна несёт убытки.', eff:{n:0,p:-1,a:0,g:-7}, badge:'⛔ БЛОКАДА', color:'bad'},
+  {type:'raid', text:'{n} наняло шпионов, которые подожгли наши склады!', eff:{n:-2,p:-1,a:0,g:-5}, badge:'🗡️ ДИВЕРСИЯ', color:'bad'},
+  {type:'neutral', text:'{n} запрашивает право прохода через наши земли.', eff:{n:0,p:0,a:0,g:3}, badge:'📜 ПРОСЬБА', color:'good'},
+  {type:'neutral', text:'{n} объявило о смене правителя. Дипломатия в подвешенном состоянии.', eff:{n:0,p:0,a:1,g:-2}, badge:'👑 ВЕСТИ', color:'good'},
+];
+function showNeighborEvent(){
+  const nb=NEIGHBORS[Math.floor(Math.random()*NEIGHBORS.length)];
+  const ev=NEIGHBOR_EVENTS[Math.floor(Math.random()*NEIGHBOR_EVENTS.length)];
+  const text=ev.text.replace('{n}',nb.name);
+  const ef=ev.eff;
+  const parts=applyEffect(ef);
+  const isGood=ev.color==='good';
+  if(isGood)sfxGood();else sfxBad();
+  addLog(nb.name+': '+text.split('.')[0]+'. '+(parts||'без изменений')+'.',isGood?'good':'bad');
+  if(checkDefeat())return;
+
+  const card=document.getElementById('event-card');
+  card.className='event-card neighbor-card'+(isGood?' neighbor-good':' neighbor-bad');
+  card.style.animation='none';void card.offsetWidth;card.style.animation='';
+  document.getElementById('card-badge').textContent=ev.badge+' СОСЕД';
+  document.getElementById('card-badge').className='card-badge '+(isGood?'badge-good':'badge-bad');
+  document.getElementById('card-title').textContent=nb.name.toUpperCase();
+  setPixelArt(nb.art);
+  typewrite(document.getElementById('event-text'),text+(parts?'\n\nЧто изменилось: '+parts+'.':''));
+  document.getElementById('btn-group').innerHTML='';
+  setNextBtnState(true);
+}
+
+// ==================== SHOW EVENT ====================
+function showEvent(){
+  const evts=buildEvents();
+  let idx,tries=0;
+  do{idx=Math.floor(Math.random()*evts.length);tries++;}while(G.recentEvents.includes(idx)&&tries<20);
+  G.recentEvents.push(idx);if(G.recentEvents.length>25)G.recentEvents.shift();
+
+  const[text,c1,c2]=evts[idx];
+  G.currentEvent={type:'event',text,choices:[c1,c2],idx};
+  G.waitingForChoice=true;setNextBtnState(false);
+
+  const card=document.getElementById('event-card');
+  card.className='event-card';
+  document.getElementById('card-badge').textContent='СОБЫТИЕ';
+  document.getElementById('card-badge').className='card-badge';
+  document.getElementById('card-title').textContent='СРОЧНОЕ ДЕЛО';
+  setPixelArt(rndSpriteKey());
+
+  card.style.animation='none';void card.offsetWidth;card.style.animation='';
+  typewrite(document.getElementById('event-text'),text);
+  document.getElementById('btn-group').innerHTML=
+    `<button class="btn btn-choice" onclick="chooseEvent(0)">${c1}</button>`+
+    `<button class="btn btn-choice" onclick="chooseEvent(1)">${c2}</button>`;
+}
+
+function chooseEvent(idx){
+  if(!G.waitingForChoice)return;
+  G.waitingForChoice=false;
+  sfxChoice();
+  const ev=G.currentEvent;
+  const ef=eventEffect(idx,ev.text);
+  const parts=applyEffect(ef);
+  const hasNeg=parts.match(/-\d/);
+  if(hasNeg)sfxBad();else sfxGood();
+  if(!hasNeg)G.fame=Math.min(999,G.fame+1);
+  addLog('Выбор: '+ev.choices[idx]+'. '+( parts||'без изменений')+'.',hasNeg?'bad':'good');
+  if(checkDefeat())return;
+  showConsequence(ev.choices[idx], parts, hasNeg?'bad':'good', ev.text, idx);
+}
+
+// ==================== SHOW QUEST ====================
+function showQuest(){
+  G.lastQuestTurn=G.turns;
+  const q=QUESTS[Math.floor(Math.random()*QUESTS.length)];
+  G.currentEvent={type:'quest',q};
+  G.waitingForChoice=true;setNextBtnState(false);
+
+  const card=document.getElementById('event-card');
+  card.className='event-card quest-card';
+  document.getElementById('card-badge').textContent='⚔ ЗАДАНИЕ';
+  document.getElementById('card-badge').className='card-badge quest-badge';
+  document.getElementById('card-title').textContent=q.title;
+  setPixelArt(q.art);
+
+  card.style.animation='none';void card.offsetWidth;card.style.animation='';
+  typewrite(document.getElementById('event-text'),q.text);
+  document.getElementById('btn-group').innerHTML=q.choices.map((c,i)=>`<button class="btn btn-quest" onclick="chooseQuest(${i})">${c}</button>`).join('');
+}
+
+function chooseQuest(idx){
+  if(!G.waitingForChoice)return;
+  G.waitingForChoice=false;sfxChoice();
+  const q=G.currentEvent.q;
+  const ef=q.effects[idx]||{n:0,p:0,a:0,g:0};
+  const parts=applyEffect(ef);
+  const hasNeg=parts.match(/-\d/);
+  if(hasNeg)sfxBad();else{sfxGood();G.fame=Math.min(999,G.fame+3);}
+  addLog('Задание: '+q.choices[idx]+'. '+(parts||'без изменений')+'.',hasNeg?'bad':'good');
+  if(checkDefeat())return;
+  showConsequence(q.choices[idx], parts, hasNeg?'bad':'good', q.text, idx);
+}
+
+// ==================== SHOW CRISIS ====================
+function showCrisis(){
+  G.lastCrisisTurn=G.turns;
+  const c=CRISIS[Math.floor(Math.random()*CRISIS.length)];
+  G.currentEvent={type:'crisis',c};
+  G.waitingForChoice=true;setNextBtnState(false);
+  sfxCrisis();
+
+  const card=document.getElementById('event-card');
+  card.className='event-card crisis-card';
+  document.getElementById('card-badge').textContent='🚨 ЭКСТРЕННОЕ РЕШЕНИЕ';
+  document.getElementById('card-badge').className='card-badge crisis-badge';
+  document.getElementById('card-title').textContent=c.title;
+  setPixelArt(c.art);
+
+  card.style.animation='none';void card.offsetWidth;card.style.animation='';
+  typewrite(document.getElementById('event-text'),c.text);
+  document.getElementById('btn-group').innerHTML=c.choices.map((ch,i)=>`<button class="btn btn-crisis" onclick="chooseCrisis(${i})">${ch}</button>`).join('');
+}
+
+function chooseCrisis(idx){
+  if(!G.waitingForChoice)return;
+  G.waitingForChoice=false;sfxChoice();
+  const c=G.currentEvent.c;
+  const ef=c.effects[idx]||{n:0,p:0,a:0,g:0};
+  const parts=applyEffect(ef);
+  const hasNeg=parts.match(/-\d/);
+  if(hasNeg)sfxBad();else sfxGood();
+  G.fame=Math.min(999,G.fame+5);
+  addLog('КРИЗИС: '+c.choices[idx]+'. '+(parts||'без изменений')+'.',hasNeg?'bad':'crisis');
+  if(checkDefeat())return;
+  showConsequence(c.choices[idx], parts, hasNeg?'bad':'crisis', c.text, idx);
+}
+
+// ==================== CLEAR CARD ====================
+function clearCard(){
+  document.getElementById('btn-group').innerHTML='';
+  setNextBtnState(true);
+}
+
+// ==================== DEFERRED EVENTS (future ripples) ====================
+// Each deferred event: {turnsLeft, title, text, art, eff}
+// Triggered by choices, fires N turns later as a surprise event
+const DEFERRED_POOL={
+  // Nature-related
+  drought_helped:   [{d:3,title:"СПАСЁННЫЕ ПОЛЯ",art:"harvest",text:"Запасы зерна, выделенные во время засухи, позволили крестьянам пережить зиму. Поля снова в цвету.",eff:{n:2,p:2,a:0,g:0}},{d:5,title:"СЛУХИ О ЩЕДРОСТИ",art:"farmer",text:"Слух о вашей щедрости разнёсся по соседним землям. Беженцы потянулись к нам.",eff:{n:0,p:2,a:0,g:-1}}],
+  drought_prayed:   [{d:4,title:"ГОЛОД В ПРОВИНЦИИ",art:"skull",text:"Молитвы не помогли. Зерновые склады оказались пусты — весной начался голод.",eff:{n:-1,p:-4,a:0,g:-2}},{d:6,title:"ВОЛНЕНИЯ НА ВОСТОКЕ",art:"bandit",text:"Голодные крестьяне подняли бунт. Деревни на востоке охвачены беспорядками.",eff:{n:0,p:-2,a:-2,g:0}}],
+  plague_closed:    [{d:4,title:"КАРАНТИН СНЯТ",art:"farmer",text:"Жёсткий карантин сработал. Чума отступила, но торговля пострадала надолго.",eff:{n:2,p:1,a:0,g:-3}},{d:7,title:"НЕДОВОЛЬСТВО КУПЦОВ",art:"merchant",text:"Купцы, разорённые блокадой, требуют компенсации и льгот.",eff:{n:0,p:-2,a:0,g:-4}}],
+  plague_healers:   [{d:3,title:"УСПЕХ ЛЕКАРЕЙ",art:"wizard",text:"Лекари разработали средство от болезни. Народ благодарен — слава правителя растёт.",eff:{n:0,p:3,a:0,g:0}},{d:6,title:"ПОВТОРНАЯ ВСПЫШКА",art:"plague",text:"Болезнь вернулась из незакрытого очага. На этот раз удар слабее, но неприятен.",eff:{n:0,p:-2,a:-1,g:-2}}],
+  gold_mine_dig:    [{d:5,title:"БОГАТАЯ ЖИЛА",art:"mine",text:"Шахтёры добрались до основной жилы. В казну поступил поток золота.",eff:{n:-1,p:0,a:0,g:7}},{d:8,title:"ОБВАЛ В ШАХТАХ",art:"forge",text:"Перегруженные шахты обрушились. Погибли рабочие, добыча прекратилась.",eff:{n:-2,p:-2,a:0,g:-3}}],
+  gold_mine_secret: [{d:4,title:"УТЕЧКА ТАЙНЫ",art:"bandit",text:"Тайна золотой жилы раскрыта. Бандиты и иноземцы уже движутся к шахтам.",eff:{n:0,p:-1,a:-2,g:0}},{d:7,title:"НОЧНОЙ ГРАБЁЖ",art:"skull",text:"Ночью неизвестные захватили шахту. Золото вывезено до рассвета.",eff:{n:0,p:0,a:-2,g:-5}}],
+  fire_fought:      [{d:3,title:"ЛЕСА ВОССТАНОВЛЕНЫ",art:"harvest",text:"Пожарные посадили новые деревья. Природа постепенно возрождается.",eff:{n:2,p:0,a:0,g:-1}},{d:5,title:"БЛАГОДАРНОСТЬ ДЕРЕВЕНЬ",art:"farmer",text:"Спасённые деревни платят налоги исправно и чтят правителя.",eff:{n:0,p:2,a:0,g:2}}],
+  fire_evac:        [{d:3,title:"ПЕРЕСЕЛЕНЦЫ ОБУСТРОИЛИСЬ",art:"farmer",text:"Эвакуированные жители осели в новых местах. Поначалу трудно, но жизнь налаживается.",eff:{n:0,p:1,a:0,g:-2}},{d:6,title:"СТАРЫЕ ЛЕСА ВЫГОРЕЛИ",art:"volcano",text:"Без тушения пожар выжег огромный лесной массив. Природа понесла урон.",eff:{n:-3,p:0,a:0,g:0}}],
+  pirates_fleet:    [{d:4,title:"ПИРАТЫ РАЗГРОМЛЕНЫ",art:"soldier",text:"Флот настиг пиратов у дальних берегов. Торговые пути снова безопасны.",eff:{n:0,p:2,a:1,g:4}},{d:7,title:"ПИРАТСКИЙ РЕВАНШ",art:"ship",text:"Выжившие пираты вернулись с подкреплением и атаковали портовый город.",eff:{n:0,p:-2,a:-2,g:-3}}],
+  pirates_ransom:   [{d:3,title:"ПИРАТЫ НАГЛЕЮТ",art:"ship",text:"Выкуп был воспринят как слабость. Пираты удвоили поборы с торговцев.",eff:{n:0,p:-1,a:0,g:-4}},{d:6,title:"КУПЦЫ НАНИМАЮТ ОХРАНУ",art:"merchant",text:"Разочарованные купцы нанимают частную охрану. Казна теряет торговые налоги.",eff:{n:0,p:0,a:0,g:-2}}],
+  bridge_built:     [{d:5,title:"ТОРГОВЛЯ РАСЦВЕЛА",art:"merchant",text:"Новый мост связал две части страны. Торговля и налоги выросли.",eff:{n:0,p:2,a:0,g:5}},{d:8,title:"МОСТ РУХНУЛ",art:"flood",text:"Плохо построенный мост обрушился под тяжёлым обозом. Катастрофа!",eff:{n:0,p:-2,a:0,g:-4}}],
+  rebellion_force:  [{d:4,title:"ЗАЧИНЩИКИ СХВАЧЕНЫ",art:"skull",text:"Военные подавили бунт. Зачинщики казнены публично.",eff:{n:0,p:-2,a:2,g:0}},{d:7,title:"ПОДПОЛЬНОЕ ДВИЖЕНИЕ",art:"bandit",text:"Подавленное восстание ушло в подполье. Тайные собрания всё активней.",eff:{n:0,p:-3,a:-1,g:-2}}],
+  rebellion_talk:   [{d:4,title:"МИР ВОССТАНОВЛЕН",art:"crown",text:"Переговоры дали плоды. Зачинщики разошлись по домам, требования частично удовлетворены.",eff:{n:0,p:4,a:0,g:-2}},{d:6,title:"ТРЕБОВАНИЯ РАСТУТ",art:"skull",text:"Увидев слабость правителя, бунтовщики выдвинули новые требования.",eff:{n:0,p:-2,a:-1,g:-2}}],
+  army_march:       [{d:5,title:"ПОБЕДА НА РУБЕЖЕ",art:"soldier",text:"Армия разгромила врага у восточных границ. Слава и трофеи вернулись в столицу.",eff:{n:0,p:2,a:2,g:4}},{d:7,title:"АРМИЯ ИЗМОТАНА",art:"skull",text:"Долгий поход истощил войска. Болезни и дезертирство косят ряды.",eff:{n:0,p:-2,a:-4,g:-2}}],
+  tax_raised:       [{d:3,title:"БУНТЫ ИЗ-ЗА НАЛОГОВ",art:"skull",text:"Повышенные налоги вызвали волну протестов в трёх провинциях.",eff:{n:0,p:-4,a:-1,g:0}},{d:5,title:"КАЗНА ПОЛНА",art:"mine",text:"Новые сборы пополнили казну, хотя народ ропщет.",eff:{n:0,p:-2,a:0,g:5}}],
+  alliance_signed:  [{d:6,title:"СОЮЗНИК ПРИСЛАЛ ВОЙСКА",art:"soldier",text:"Союзное королевство выполнило договор — прислало три тысячи воинов.",eff:{n:0,p:0,a:4,g:0}},{d:8,title:"СОЮЗНИК ТРЕБУЕТ ПОМОЩИ",art:"ship",text:"Союзник сам попал в беду и просит войска и золото.",eff:{n:0,p:0,a:-2,g:-5}}],
+  forest_cut:       [{d:4,title:"ЭКОЛОГИЧЕСКИЙ КРИЗИС",art:"volcano",text:"Вырубка Великого Леса обернулась катастрофой. Реки мелеют, поля пересыхают.",eff:{n:-4,p:-2,a:0,g:0}},{d:7,title:"ОПУСТЫНИВАНИЕ",art:"harvest",text:"Без деревьев ветра уносят плодородный слой почвы. Поля становятся пустыней.",eff:{n:-3,p:-2,a:0,g:-2}}],
+  academy_built:    [{d:6,title:"ОТКРЫТИЕ УЧЁНЫХ",art:"wizard",text:"Академия наук сделала важное открытие. Производительность выросла.",eff:{n:1,p:2,a:0,g:4}},{d:9,title:"МЕЖДУНАРОДНОЕ ПРИЗНАНИЕ",art:"crown",text:"Слава Академии привлекла учёных со всего мира. Страна стала центром знаний.",eff:{n:0,p:2,a:0,g:2}}],
+  expedition_sent:  [{d:5,title:"ЭКСПЕДИЦИЯ ВЕРНУЛАСЬ",art:"ship",text:"Мореходы привезли специи, золото и карты новых земель!",eff:{n:0,p:1,a:0,g:8}},{d:6,title:"ЭКСПЕДИЦИЯ ПРОПАЛА",art:"skull",text:"Корабли не вернулись. Семьи моряков требуют ответа.",eff:{n:0,p:-2,a:0,g:-2}}],
+  refugees_accepted:[{d:4,title:"БЕЖЕНЦЫ ОБУСТРОИЛИСЬ",art:"farmer",text:"Новые жители освоили заброшенные земли. Налоговая база выросла.",eff:{n:0,p:0,a:0,g:3}},{d:6,title:"БОЛЕЗНИ ОТ БЕЖЕНЦЕВ",art:"plague",text:"С беженцами пришли неизвестные хвори. Эпидемия охватила несколько городов.",eff:{n:0,p:-4,a:-1,g:-2}}],
+  war_declared:     [{d:4,title:"ПЕРВЫЕ БОИ",art:"soldier",text:"Пограничные столкновения переросли в полноценную войну. Потери с обеих сторон.",eff:{n:-1,p:-3,a:2,g:-4}},{d:8,title:"ВОЙНА ЗАТЯНУЛАСЬ",art:"skull",text:"Война идёт уже несколько лет. Страна истощена, народ устал.",eff:{n:-2,p:-4,a:-2,g:-6}}],
+  peace_kept:       [{d:5,title:"МИР УКРЕПИЛСЯ",art:"crown",text:"Годы мирного сосуществования принесли плоды. Торговля процветает.",eff:{n:0,p:2,a:0,g:4}},{d:7,title:"СОСЕД УКРЕПИЛСЯ",art:"bomb",text:"Пока мы миролюбивы, сосед усилил армию. Его взгляды на нас тревожат.",eff:{n:0,p:0,a:-2,g:0}}],
+};
+
+// Chance of a deferred ripple (50% per non-neutral event)
+const RIPPLE_CHANCE=0.50;
+const RIPPLE_TRIGGERS={
+  // eventText keyword → pool key
+  'засух': ['drought_helped','drought_prayed'],
+  'чума':  ['plague_closed','plague_healers'],
+  'золот': ['gold_mine_dig','gold_mine_secret'],
+  'пожар': ['fire_fought','fire_evac'],
+  'пират': ['pirates_fleet','pirates_ransom'],
+  'мост':  ['bridge_built','bridge_built'],
+  'бунт':  ['rebellion_force','rebellion_talk'],
+  'восстан':['rebellion_force','rebellion_talk'],
+  'армия': ['army_march','army_march'],
+  'налог': ['tax_raised','tax_raised'],
+  'союз':  ['alliance_signed','alliance_signed'],
+  'лес':   ['forest_cut','forest_cut'],
+  'академи':['academy_built','academy_built'],
+  'экспеди':['expedition_sent','expedition_sent'],
+  'беженц': ['refugees_accepted','refugees_accepted'],
+  'война':  ['war_declared','war_declared'],
+  'мир':    ['peace_kept','peace_kept'],
+};
+
+function pickRippleKey(eventText, choiceIdx){
+  const low=eventText.toLowerCase();
+  for(const [kw,keys] of Object.entries(RIPPLE_TRIGGERS)){
+    if(low.includes(kw)) return keys[choiceIdx%keys.length];
+  }
+  return null;
+}
+
+function scheduleRipple(eventText, choiceIdx, choiceText){
+  if(Math.random()>RIPPLE_CHANCE) return;
+  const key=pickRippleKey(eventText, choiceIdx);
+  if(!key||!DEFERRED_POOL[key]) return;
+  const pool=DEFERRED_POOL[key];
+  const ripple=pool[Math.floor(Math.random()*pool.length)];
+  const delay=ripple.d+(Math.floor(Math.random()*3)-1); // ±1 turn variance
+  G.pendingRipples=G.pendingRipples||[];
+  G.pendingRipples.push({turnsLeft:Math.max(2,delay), title:ripple.title, text:ripple.text, art:ripple.art, eff:{...ripple.eff}, origin:choiceText});
+}
+
+function checkRipples(){
+  if(!G.pendingRipples||G.pendingRipples.length===0) return false;
+  G.pendingRipples=G.pendingRipples.filter(r=>{r.turnsLeft--;return r.turnsLeft>0||r.turnsLeft===0;});
+  const fired=G.pendingRipples.filter(r=>r.turnsLeft<=0);
+  G.pendingRipples=G.pendingRipples.filter(r=>r.turnsLeft>0);
+  if(fired.length===0) return false;
+  const r=fired[0]; // fire one at a time
+  // put rest back
+  fired.slice(1).forEach(x=>{x.turnsLeft=1;G.pendingRipples.push(x);});
+  showRippleEvent(r);
+  return true;
+}
+
+function showRippleEvent(r){
+  const parts=applyEffect(r.eff);
+  const hasNeg=parts.match(/-\d/);
+  if(hasNeg)sfxBad();else sfxGood();
+  addLog('⟳ '+r.title+'. '+(parts||'без изменений')+'.',hasNeg?'bad':'crisis');
+  if(checkDefeat())return;
+
+  const card=document.getElementById('event-card');
+  card.className='event-card ripple-card'+(hasNeg?' ripple-bad':' ripple-good');
+  card.style.animation='none';void card.offsetWidth;card.style.animation='';
+  document.getElementById('card-badge').textContent='⟳ ПОСЛЕДСТВИЕ';
+  document.getElementById('card-badge').className='card-badge '+(hasNeg?'badge-bad':'badge-good');
+  document.getElementById('card-title').textContent=r.title;
+  setPixelArt(r.art);
+  const originLine=r.origin?`\n\n(Последствие решения: "${r.origin}")`:'';
+  typewrite(document.getElementById('event-text'), r.text+(parts?'\n\nИтог: '+parts+'.':'')+originLine);
+  document.getElementById('btn-group').innerHTML='';
+  setNextBtnState(true);
+}
+
+// ==================== CONSEQUENCE DISPLAY ====================
+// Specific consequence texts keyed by choice keywords
+const SPECIFIC_CONSEQUENCES=[
+  {kw:'пшениц', text:'Вся пшеница из резервных складов роздана. Закрома пусты до следующего урожая.'},
+  {kw:'запас',  text:'Государственные запасы истрачены. Если следующий урожай подведёт — голод неизбежен.'},
+  {kw:'молить', text:'Жрецы провели обряды. Дождь так и не пришёл, но народ успокоился.'},
+  {kw:'закрыт', text:'Ворота закрыты на засов. Торговцы ругаются, но болезнь не проходит.'},
+  {kw:'лекар',  text:'Лекари выехали в провинции. Многие заразились сами, но эпидемию сдержали.'},
+  {kw:'добыч',  text:'Шахтёры приступили к работе. Первые слитки уже в пути к столице.'},
+  {kw:'тайн',   text:'Тайна хранится. Но слуги, знающие о жиле, смотрят слишком алчно.'},
+  {kw:'тушит',  text:'Сотни людей бросились тушить огонь. Трое погибли, деревни спасены.'},
+  {kw:'эвакуир',text:'Люди покинули дома с тем, что успели унести. Деревни выгорели дотла.'},
+  {kw:'флот',   text:'Военные корабли вышли в море. Капитан поклялся вернуть каждую монету.'},
+  {kw:'выкуп',  text:'Пираты взяли золото и дали слово. Купцы не верят, что те его сдержат.'},
+  {kw:'восстанов',text:'Строители работают днём и ночью. Мост должен устоять на этот раз.'},
+  {kw:'объезд', text:'Торговцы злятся на крюк в двадцать вёрст, но выбора нет.'},
+  {kw:'армию',  text:'Военные отказались принять приказ без полного жалованья вперёд. Пришлось платить.'},
+  {kw:'дипломат',text:'Посол выехал с белым флагом. Вернётся ли — неизвестно.'},
+  {kw:'пир',    text:'Столицу залили вином. Народ веселился три дня, работа встала.'},
+  {kw:'зачист', text:'Дорога очищена. Тела разбойников на кольях у въезда — предупреждение всем.'},
+  {kw:'помощь', text:'Обозы с зерном отправлены. Часть разграблена по дороге.'},
+  {kw:'подав',  text:'Гвардия разогнала бунтовщиков. На площади остались кровь и страх.'},
+  {kw:'перегов',text:'Вы сели за стол с зачинщиками. Впервые в истории страны.'},
+  {kw:'казнит', text:'Голова изменника выставлена у ворот. Шпионы попрятались — на время.'},
+  {kw:'субсид', text:'Деньги выданы цеху. Мастера обещают новые мечи к зиме.'},
+  {kw:'налог',  text:'Новый налог введён. Сборщики уже объезжают деревни с охраной.'},
+  {kw:'академи',text:'Первый камень Академии заложен. Учёные со всей страны едут в столицу.'},
+  {kw:'беженц', text:'Беженцы входят в ворота. Местные смотрят с подозрением.'},
+  {kw:'колони', text:'Корабли отплыли к новым берегам. Назад вернутся не все.'},
+  {kw:'войну',  text:'Посланники разнесли объявление войны. Колокола бьют тревогу у границ.'},
+  {kw:'мир',    text:'Мирный договор скреплён печатями. Солдаты возвращаются домой.'},
+  {kw:'парламент',text:'Парламент собрался впервые. Бароны спорят, а народ с надеждой смотрит.'},
+  {kw:'монарх', text:'Монархия укреплена. Знатных землевладельцев предупредили: следующий мятеж — казнь.'},
+  {kw:'карантин',text:'Карантинные заставы выставлены. Нарушителей бьют плетьми на месте.'},
+  {kw:'купить', text:'Торговцы взяли втридорога. Казна убыла, но товар доставлен.'},
+  {kw:'запретит',text:'Указ объявлен. Стражники обходят дворы с обысками.'},
+  {kw:'отправит',text:'Посланники ускакали ещё до рассвета. Ответ придёт через неделю.'},
+  {kw:'союзник',text:'Договор подписан. Союзник пожал руку, глаза у него хитрые.'},
+  {kw:'вырубк', text:'Лесорубы вошли в чащу с факелами. Птицы разлетелись, лоси ушли.'},
+  {kw:'охран',  text:'Егеря расставили посты по всему лесу. Браконьеры затаились.'},
+];
+
+function getSpecificConsequence(choiceText){
+  const low=choiceText.toLowerCase();
+  const matches=SPECIFIC_CONSEQUENCES.filter(c=>low.includes(c.kw));
+  if(matches.length>0) return matches[Math.floor(Math.random()*matches.length)].text;
+  // generic fallback
+  const GENERIC_GOOD=["Народ одобрительно кивает. Решение принято.",
+    "Советники довольны. Дело сделано.","Посланники разнесли весть по стране.",
+    "Государственная машина пришла в движение.","Историки записали решение в летопись."];
+  const GENERIC_BAD=["Решение принято. Последствия покажет время.",
+    "Казна потрачена. Возврата нет.","Народ ропщет, но подчиняется.",
+    "Советники переглянулись, но промолчали.","Цену этого выбора узнаем позже."];
+  return null; // will use pool fallback
+}
+
+function showConsequence(choice, parts, type, eventText, choiceIdx){
+  const card=document.getElementById('event-card');
+  const isGood=(type==='good');
+
+  // Try specific consequence text
+  let flavorText=getSpecificConsequence(choice);
+  if(!flavorText){
+    const pool=isGood?[
+      "Народ доволен. Слава правителя растёт.",
+      "Мудрое решение. Советники одобрительно кивают.",
+      "Историки запишут это как верный шаг.",
+      "В тавернах говорят о вашей мудрости.",
+      "Посланники разнесли добрые вести по стране.",
+      "Государство крепнет под вашим руководством.",
+    ]:[
+      "Недовольство зреет в народе...",
+      "Советники переглядываются в тревоге.",
+      "Цена этого решения окажется высокой.",
+      "Шёпот недовольства слышен при дворе.",
+      "В провинциях не скрывают разочарования.",
+      "Казна и терпение народа тают...",
+    ];
+    flavorText=pool[Math.floor(Math.random()*pool.length)];
+  }
+
+  const effectLine=parts?`\n\nЧто изменилось: ${parts}.`:'';
+  const fullText=`✦ ${choice}\n\n${flavorText}${effectLine}`;
+
+  card.className='event-card'+(isGood?' consequence-good':' consequence-bad');
+  card.style.animation='none';void card.offsetWidth;card.style.animation='';
+  document.getElementById('card-badge').textContent=isGood?'✓ ХОРОШИЙ ИСХОД':'✗ ПЛОХОЙ ИСХОД';
+  document.getElementById('card-badge').className='card-badge'+(isGood?' badge-good':' badge-bad');
+  document.getElementById('card-title').textContent=isGood?'РЕЗУЛЬТАТ РЕШЕНИЯ':'ПОСЛЕДСТВИЯ РЕШЕНИЯ';
+  document.getElementById('event-text').textContent=fullText;
+  document.getElementById('btn-group').innerHTML='';
+  setNextBtnState(true);
+
+  // Schedule a future ripple based on this decision
+  if(eventText) scheduleRipple(eventText, choiceIdx||0, choice);
+}
+
+// ==================== EPOCH ====================
+function triggerEpoch(){
+  let leap;
+  if(G.year>=2000){leap=1+Math.floor(Math.random()*2);}
+  else if(G.year>=1800){leap=3+Math.floor(Math.random()*5);}
+  else{leap=4+Math.floor(Math.random()*6);}
+  G.fractYear+=leap;G.year=Math.floor(G.fractYear);G.epochThreshold+=250;
+  ['nature','people','army','gold'].forEach(r=>{const d=(Math.floor(Math.random()*8)+1)*(Math.random()<0.5?1:-1);G[r]=clamp(G[r]+d);});
+  updateUI();saveLocal(true);sfxEpoch();
+  document.getElementById('epoch-years-text').textContent='+'+leap+' ЛЕТ';
+  document.getElementById('epoch-sub').textContent='Теперь '+G.year+' год. Автосохранение создано.';
+  document.getElementById('epoch-msg').style.display='block';
+  addLog('⚡ Эпоха! +'+leap+' лет. Год '+G.year+'.','crisis');
+}
+function closeEpoch(){document.getElementById('epoch-msg').style.display='none';if(G.year>=2300){winGame();return;}if(checkDefeat())return;document.getElementById('btn-group').innerHTML='';setNextBtnState(true);}
+
+// ==================== END GAME ====================
+function checkDefeat(){
+  if(G.nature<=0){gameOverReason('🌿 ЭКОЛОГИЧЕСКАЯ КАТАСТРОФА','Природа уничтожена. Земля мертва.');return true;}
+  if(G.people<=0){gameOverReason('💀 ВЫМИРАНИЕ','Народ погиб. Некому управлять.');return true;}
+  if(G.army<=0){gameOverReason('⚔️ ЗАВОЁВАНЫ','Армия распалась. Враги захватили страну.');return true;}
+  if(G.gold<=0){gameOverReason('💸 БАНКРОТСТВО','Казна пуста. Государство рухнуло.');return true;}
+  return false;
+}
+function gameOverReason(title,reason){
+  G.gameOver=true;sfxDefeat();
+  const ov=document.getElementById('overlay');ov.className='overlay-lose show';
+  document.getElementById('overlay-title').textContent=title;
+  document.getElementById('overlay-sub').textContent=reason+'\nГод '+G.year+' · Ходов '+G.turns+' · Слава '+G.fame;
+  document.getElementById('star-rain').innerHTML='';
+}
+function winGame(){
+  G.gameOver=true;sfxWin();
+  // Determine ending based on final stats
+  let ending;
+  const avg=(G.nature+G.people+G.army+G.gold)/4;
+  if(G.fame>=200 && avg>=70){
+    ending={title:'👑 ЗОЛОТОЙ ВЕК',sub:'Под вашим правлением страна достигла небывалого расцвета.\nВас назовут Великим в веках. Слава: '+G.fame,color:'#ffd700'};
+  } else if(G.nature>=80){
+    ending={title:'🌿 ЗЕЛЁНАЯ УТОПИЯ',sub:'Вы сберегли природу ценой всего остального.\nПотомки будут дышать чистым воздухом. Год '+G.year,color:'#00dd66'};
+  } else if(G.army>=80){
+    ending={title:'⚔️ ВОЕННАЯ ИМПЕРИЯ',sub:'Ваша армия непобедима. Соседи трепещут.\nИстория запомнит вас как великого завоевателя.',color:'#ff6b35'};
+  } else if(G.gold>=80){
+    ending={title:'💰 ТОРГОВАЯ ДЕРЖАВА',sub:'Богатство государства поражает весь мир.\nВаши купцы торгуют на всех континентах.',color:'#ffd700'};
+  } else if(G.people>=80){
+    ending={title:'🏛️ НАРОДНАЯ РЕСПУБЛИКА',sub:'Народ счастлив и свободен.\nВас любят как никого другого в истории.',color:'#55ddff'};
+  } else if(avg>=60){
+    ending={title:'🚀 В БУДУЩЕЕ!',sub:'Цивилизация пережила тысячелетие и вышла к звёздам.\nГод '+G.year+' · Ходов '+G.turns+' · Слава '+G.fame,color:'#55ddff'};
+  } else {
+    ending={title:'📜 ВЫЖИЛИ',sub:'Государство дотянуло до '+G.year+' года.\nЭто само по себе подвиг. Слава: '+G.fame,color:'#cccccc'};
+  }
+  const ov=document.getElementById('overlay');ov.className='overlay-win show';
+  document.getElementById('overlay-title').textContent=ending.title;
+  document.getElementById('overlay-title').style.color=ending.color;
+  document.getElementById('overlay-sub').textContent=ending.sub;
+  const rain=document.getElementById('star-rain');rain.innerHTML='';
+  for(let i=0;i<60;i++){const s=document.createElement('div');s.className='win-star';s.textContent=['★','✦','✧','✩','☆'][Math.floor(Math.random()*5)];s.style.left=Math.random()*100+'%';s.style.animationDuration=(2+Math.random()*4)+'s';s.style.animationDelay=(Math.random()*4)+'s';s.style.fontSize=(8+Math.random()*16)+'px';s.style.color=ending.color;rain.appendChild(s);}
+}
+function restartGame(){document.getElementById('overlay').className='';document.getElementById('star-rain').innerHTML='';newGame();updateUI();document.getElementById('log-list').innerHTML='<li>Новая игра начата.</li>';document.getElementById('btn-group').innerHTML='';setNextBtnState(true);}
+
+// ==================== SAVE ====================
+const SALT='PrEz2024';
+function encodeState(s){const o={n:s.nature,p:s.people,a:s.army,g:s.gold,y:s.year,fy:s.fractYear,t:s.turns,d:s.totalDays,et:s.epochThreshold,lq:s.lastQuestTurn,lc:s.lastCrisisTurn,re:s.recentEvents.slice(-10),f:s.fame,pr:(s.pendingRipples||[]).map(r=>({tl:r.turnsLeft,ti:r.title,tx:r.text,ar:r.art,ef:r.eff,or:r.origin}))};const j=JSON.stringify(o);let e='';for(let i=0;i<j.length;i++)e+=String.fromCharCode(j.charCodeAt(i)^SALT.charCodeAt(i%SALT.length));return btoa(e);}
+function decodeState(code){try{const d=atob(code);let j="";for(let i=0;i<d.length;i++)j+=String.fromCharCode(d.charCodeAt(i)^SALT.charCodeAt(i%SALT.length));const o=JSON.parse(j);const pr=(o.pr||[]).map(r=>({turnsLeft:r.tl,title:r.ti,text:r.tx,art:r.ar,eff:r.ef,origin:r.or}));return{nature:o.n,people:o.p,army:o.a,gold:o.g,year:o.y,fractYear:o.fy||o.y,turns:o.t,totalDays:o.d,epochThreshold:o.et||250,lastQuestTurn:o.lq||-10,lastCrisisTurn:o.lc||-20,recentEvents:o.re||[],fame:o.f||0,pendingRipples:pr,threats:[],stability:60,decayAccum:0,waitingForChoice:false,currentEvent:null,gameOver:false};}catch(e){return null;}}
+function saveLocal(si){try{localStorage.setItem('prez_save',encodeState(G));if(!si)addLog('💾 Сохранено.');}catch(e){addLog('❌ Ошибка.');}}
+function saveCode(){const code=encodeState(G);document.getElementById('save-code-input').value=code;addLog('🔐 Код создан!');try{document.getElementById('save-code-input').select();document.execCommand('copy');}catch(e){}}
+function loadLocal(){const d=localStorage.getItem('prez_save');if(!d){addLog('❌ Нет сохранений.');return;}const s=decodeState(d);if(!s){addLog('❌ Повреждён.');return;}Object.assign(G,s);updateUI();document.getElementById('btn-group').innerHTML='';setNextBtnState(true);addLog('📀 Загружено. Год '+G.year+'.');}
+function loadCode(){const code=document.getElementById('save-code-input').value.trim();if(!code){addLog('❌ Введите код.');return;}const s=decodeState(code);if(!s){addLog('❌ Неверный код.');return;}Object.assign(G,s);updateUI();document.getElementById('btn-group').innerHTML='';setNextBtnState(true);addLog('📋 Загружено. Год '+G.year+'.');}
+
+// ==================== INIT ====================
+updateUI();
+setPixelArt('king_throne');
+document.getElementById('event-text').textContent='Вы принимаете власть над великим государством. Ваши решения определят судьбу народа на века.';
+setNextBtnState(true);
+</script>
+</body>
+</html>
